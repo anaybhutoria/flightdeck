@@ -7,7 +7,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>FlightDeck</title>
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmxpZ2h0RGVjayIsInNob3J0X25hbWUiOiJGbGlnaHREZWNrIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwYTBlMWEiLCJ0aGVtZV9jb2xvciI6IiMwYTBlMWEiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCc+4p2I77iPPC90ZXh0Pjwvc3ZnPiIsInNpemVzIjoiYW55IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0e1a;--card:#141828;--card2:#1a2035;--accent:#6c63ff;--accent2:#00d4aa;--text:#e8eaf6;--text2:#8892b0;--danger:#ff5252;--warn:#ffab40;--success:#69f0ae;--radius:16px;--shadow:0 8px 32px rgba(0,0,0,.4)}
@@ -20,75 +19,62 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .header h1 span{font-size:24px;-webkit-text-fill-color:initial}
 .header p{color:var(--text2);font-size:13px;margin-top:4px}
 
-.search-wrap{margin:0 16px 8px;position:relative}
+.search-wrap{margin:0 16px 16px;position:relative}
 .search-wrap input{width:100%;padding:16px 54px 16px 20px;border:2px solid transparent;border-radius:var(--radius);background:var(--card);color:var(--text);font-size:16px;outline:none;transition:.3s}
 .search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(108,99,255,.15)}
 .search-wrap input::placeholder{color:var(--text2)}
 .search-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
 .search-btn:active{transform:translateY(-50%) scale(.9)}
 
-/* Live result panel */
-.live-result{margin:12px 16px;padding:0;display:none;animation:slideUp .4s ease}
-.live-result.show{display:block}
-.live-card{background:var(--card);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
-.live-card .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.live-card .flight-num{font-size:22px;font-weight:800;letter-spacing:1px}
-.live-card .airline-name{font-size:13px;color:var(--text2);margin-top:2px}
-.live-loading{text-align:center;padding:30px;color:var(--accent)}
-.live-loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--card2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.live-error{text-align:center;padding:20px;color:var(--danger);font-size:14px}
-.live-error button{margin-top:10px;padding:8px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
-
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.detail-item{background:var(--card2);border-radius:12px;padding:12px}
-.detail-item .label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.detail-item .value{font-size:15px;font-weight:700}
-.detail-item.full{grid-column:1/-1}
-
-.live-actions{display:flex;gap:8px;margin-top:14px}
-.live-actions button{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
-.live-actions button:active{transform:scale(.96)}
-.btn-track{background:var(--accent);color:#fff}
-.btn-close{background:rgba(255,255,255,.06);color:var(--text2)}
-.btn-refresh{background:rgba(0,212,170,.12);color:var(--accent2)}
-
-/* Tabs */
-.tabs{display:flex;margin:16px 16px 8px;gap:8px}
+.tabs{display:flex;margin:0 16px 8px;gap:8px}
 .tab{flex:1;padding:10px;border:none;border-radius:12px;background:var(--card);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.3s}
 .tab.active{background:var(--accent);color:#fff}
 
 .cards{padding:8px 16px 100px;display:flex;flex-direction:column;gap:12px}
+
+/* Loading */
+.loading{text-align:center;padding:40px 20px;color:var(--accent)}
+.loading .spinner{width:40px;height:40px;border:3px solid var(--card2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Flight card */
 .flight-card{background:var(--card);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;animation:slideUp .4s ease;transition:transform .2s}
 .flight-card:active{transform:scale(.98)}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .flight-num{font-size:22px;font-weight:800;letter-spacing:1px}
+.airline-name{font-size:12px;color:var(--text2);margin-top:2px}
 .status-badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.status-scheduled{background:rgba(108,99,255,.15);color:var(--accent)}
-.status-boarding{background:rgba(255,171,64,.15);color:var(--warn)}
-.status-departed{background:rgba(0,212,170,.15);color:var(--accent2)}
-.status-in-flight{background:rgba(0,212,170,.2);color:var(--accent2)}
-.status-landed{background:rgba(105,240,174,.15);color:var(--success)}
-.status-delayed{background:rgba(255,82,82,.15);color:var(--danger)}
-.status-cancelled{background:rgba(255,82,82,.2);color:var(--danger)}
-.status-active{background:rgba(0,212,170,.2);color:var(--accent2)}
-.status-unknown{background:rgba(255,255,255,.06);color:var(--text2)}
+.status-green{background:rgba(105,240,174,.15);color:var(--success)}
+.status-yellow{background:rgba(255,171,64,.15);color:var(--warn)}
+.status-red{background:rgba(255,82,82,.15);color:var(--danger)}
+.status-blue{background:rgba(108,99,255,.15);color:var(--accent)}
 
-.route{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.route{display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .airport{text-align:center;flex:1}
 .airport .code{font-size:26px;font-weight:800}
 .airport .city{font-size:11px;color:var(--text2);margin-top:2px}
-.airport .time{font-size:14px;color:var(--text);margin-top:6px;font-weight:600}
+.airport .time{font-size:15px;color:var(--text);margin-top:6px;font-weight:600}
+.airport .time-label{font-size:10px;color:var(--text2)}
+.airport .time-actual{color:var(--success);font-size:13px}
+.airport .time-delayed{color:var(--danger);text-decoration:line-through;font-size:12px;opacity:.7}
 .route-line{flex:2;display:flex;align-items:center;position:relative;height:30px}
 .route-line::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:1px}
-.route-line .plane{position:absolute;font-size:20px;top:50%;transform:translateY(-50%);animation:fly 3s ease-in-out infinite alternate;filter:drop-shadow(0 0 6px var(--accent))}
+.route-line .plane{position:absolute;font-size:20px;top:50%;transform:translateY(-50%);filter:drop-shadow(0 0 6px var(--accent))}
+.route-line .plane.flying{animation:fly 3s ease-in-out infinite alternate}
 @keyframes fly{from{left:10%}to{left:80%}}
 
-.card-meta{display:flex;gap:16px;flex-wrap:wrap}
-.meta-item{font-size:12px;color:var(--text2)}
-.meta-item strong{color:var(--text);font-weight:600}
+.progress-bar{width:100%;height:6px;background:var(--card2);border-radius:3px;margin:8px 0 16px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 1s ease}
+
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-top:12px}
+.detail-item{background:var(--card2);border-radius:10px;padding:10px;text-align:center}
+.detail-item .label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.detail-item .value{font-size:14px;font-weight:700;margin-top:4px}
+
+.codeshares{margin-top:12px;padding:10px;background:var(--card2);border-radius:10px;font-size:12px;color:var(--text2)}
+.codeshares strong{color:var(--text)}
 
 .countdown{margin-top:12px;padding:12px;border-radius:12px;background:rgba(108,99,255,.08);text-align:center;font-size:14px;color:var(--accent);font-weight:600}
 
@@ -100,6 +86,14 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .empty .icon{font-size:64px;margin-bottom:16px;opacity:.5}
 .empty p{font-size:15px;line-height:1.6}
 
+.error-msg{text-align:center;padding:30px 20px;color:var(--danger);background:var(--card);border-radius:var(--radius);margin:0 16px}
+
+.fab{position:fixed;bottom:24px;right:20px;width:56px;height:56px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:28px;cursor:pointer;box-shadow:0 8px 24px rgba(108,99,255,.4);z-index:50;display:flex;align-items:center;justify-content:center;transition:.2s}
+.fab:active{transform:scale(.9)}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);color:var(--text);padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:300;transition:.3s;opacity:0;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex;animation:fadeIn .2s}
@@ -110,7 +104,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .modal label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;font-weight:600}
 .modal input,.modal select{width:100%;padding:14px 16px;border:2px solid rgba(255,255,255,.06);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;outline:none;margin-bottom:16px;transition:.3s}
 .modal input:focus,.modal select:focus{border-color:var(--accent)}
-.modal select option{background:var(--bg)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .modal-btns{display:flex;gap:10px;margin-top:8px}
 .modal-btns button{flex:1;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
@@ -118,21 +111,9 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .btn-primary:active{transform:scale(.96)}
 .btn-secondary{background:rgba(255,255,255,.06);color:var(--text2)}
 
-.fab{position:fixed;bottom:24px;right:20px;width:56px;height:56px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:28px;cursor:pointer;box-shadow:0 8px 24px rgba(108,99,255,.4);z-index:50;display:flex;align-items:center;justify-content:center;transition:.2s}
-.fab:active{transform:scale(.9)}
-
-.ptr{text-align:center;padding:12px;color:var(--accent);font-size:13px;font-weight:600;opacity:0;transition:.3s;height:0;overflow:hidden}
-.ptr.show{opacity:1;height:40px}
-
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);color:var(--text);padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:300;transition:.3s;opacity:0;box-shadow:var(--shadow)}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
-/* API key input */
-.api-bar{margin:0 16px 12px;padding:12px 16px;background:var(--card);border-radius:var(--radius);display:flex;gap:8px;align-items:center}
-.api-bar input{flex:1;padding:10px 14px;border:2px solid rgba(255,255,255,.06);border-radius:10px;background:var(--bg);color:var(--text);font-size:13px;outline:none}
-.api-bar input:focus{border-color:var(--accent)}
-.api-bar button{padding:10px 16px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
-.api-bar .hint{font-size:11px;color:var(--text2)}
+.recent-searches{margin:0 16px 16px;display:flex;gap:8px;flex-wrap:wrap}
+.recent-chip{padding:6px 14px;border-radius:20px;background:var(--card);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,.06)}
+.recent-chip:hover{border-color:var(--accent);color:var(--text)}
 </style>
 </head>
 <body>
@@ -143,64 +124,39 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 </div>
 
 <div class="search-wrap">
-  <input type="text" id="searchInput" placeholder="Enter flight number (e.g. WS137)" autocomplete="off" autocapitalize="characters" spellcheck="false">
+  <input type="text" id="searchInput" placeholder="Flight number (e.g. AC226, WS137)" autocomplete="off" autocapitalize="characters" spellcheck="false">
   <button class="search-btn" id="searchBtn" aria-label="Search">🔍</button>
 </div>
 
-<!-- API Key config (collapsed by default) -->
-<div class="api-bar" id="apiBar" style="display:none">
-  <input type="text" id="apiKeyInput" placeholder="AviationStack API key (optional)">
-  <button onclick="saveApiKey()">Save</button>
-</div>
-
-<!-- Live search result -->
-<div class="live-result" id="liveResult"></div>
+<div class="recent-searches" id="recentSearches"></div>
 
 <div class="tabs">
-  <button class="tab active" data-filter="all">All</button>
-  <button class="tab" data-filter="active">Active</button>
-  <button class="tab" data-filter="completed">Completed</button>
+  <button class="tab active" data-filter="live">🔴 Live</button>
+  <button class="tab" data-filter="saved">💾 Saved</button>
 </div>
 
-<div class="ptr" id="ptr">↻ Refreshing...</div>
 <div class="cards" id="cards"></div>
 
-<button class="fab" id="fab" aria-label="Add flight">+</button>
+<button class="fab" id="fab" aria-label="Refresh">↻</button>
 
-<!-- Add/Edit Modal -->
+<!-- Manual Add Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <h2>✈️ <span id="modalTitle">Add Flight</span></h2>
+    <h2>✈️ Add Flight Manually</h2>
     <label>Flight Number</label>
-    <input type="text" id="fNum" placeholder="WS137" autocapitalize="characters">
+    <input type="text" id="fNum" placeholder="AC226" autocapitalize="characters">
     <div class="row">
-      <div><label>From (Code)</label><input type="text" id="fFrom" placeholder="YYC" maxlength="4" autocapitalize="characters"></div>
-      <div><label>To (Code)</label><input type="text" id="fTo" placeholder="YVR" maxlength="4" autocapitalize="characters"></div>
-    </div>
-    <div class="row">
-      <div><label>From City</label><input type="text" id="fFromCity" placeholder="Calgary"></div>
-      <div><label>To City</label><input type="text" id="fToCity" placeholder="Vancouver"></div>
+      <div><label>From</label><input type="text" id="fFrom" placeholder="YVR" maxlength="4" autocapitalize="characters"></div>
+      <div><label>To</label><input type="text" id="fTo" placeholder="YYC" maxlength="4" autocapitalize="characters"></div>
     </div>
     <div class="row">
       <div><label>Departure</label><input type="datetime-local" id="fDepart"></div>
       <div><label>Arrival</label><input type="datetime-local" id="fArrive"></div>
     </div>
-    <label>Status</label>
-    <select id="fStatus">
-      <option value="scheduled">📅 Scheduled</option>
-      <option value="boarding">🚪 Boarding</option>
-      <option value="departed">🛫 Departed</option>
-      <option value="in-flight">✈️ In Flight</option>
-      <option value="landed">🛬 Landed</option>
-      <option value="delayed">⚠️ Delayed</option>
-      <option value="cancelled">❌ Cancelled</option>
-    </select>
-    <label>Gate (optional)</label>
-    <input type="text" id="fGate" placeholder="B42">
-    <label>Notes (optional)</label>
+    <label>Notes</label>
     <input type="text" id="fNotes" placeholder="Window seat, row 12A">
     <div class="modal-btns">
-      <button class="btn-primary" id="saveBtn">Save Flight</button>
+      <button class="btn-primary" id="saveBtn">Save</button>
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
     </div>
   </div>
@@ -209,447 +165,302 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 <div class="toast" id="toast"></div>
 
 <script>
-const LS_KEY = 'flightdeck_flights';
-const API_KEY_LS = 'flightdeck_apikey';
-let flights = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-let editId = null;
-let currentFilter = 'all';
-let lastLiveData = null;
+const PROXY = 'https://api.allorigins.win/get?url=';
+const FS_BASE = 'https://www.flightstats.com/v2/flight-tracker/';
+const LS_FLIGHTS = 'fd_flights';
+const LS_RECENT = 'fd_recent';
+const LS_SAVED = 'fd_saved';
+
+let liveFlights = JSON.parse(localStorage.getItem(LS_FLIGHTS) || '[]');
+let savedFlights = JSON.parse(localStorage.getItem(LS_SAVED) || '[]');
+let recentSearches = JSON.parse(localStorage.getItem(LS_RECENT) || '[]');
+let currentFilter = 'live';
+let isLoading = false;
 
 const $ = id => document.getElementById(id);
-const statusEmoji = {scheduled:'📅',boarding:'🚪',departed:'🛫','in-flight':'✈️',landed:'🛬',delayed:'⚠️',cancelled:'❌',active:'✈️',unknown:'❓'};
-const statusLabel = {scheduled:'Scheduled',boarding:'Boarding',departed:'Departed','in-flight':'In Flight',landed:'Landed',delayed:'Delayed',cancelled:'Cancelled',active:'Active',unknown:'Unknown'};
 
-function save(){localStorage.setItem(LS_KEY, JSON.stringify(flights))}
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-
-function countdown(dep){
-  if(!dep)return null;
-  const diff=new Date(dep)-new Date();
-  if(diff<=0)return null;
-  const h=Math.floor(diff/36e5),m=Math.floor((diff%36e5)/6e4);
-  if(h>48){const d=Math.floor(h/24);return `${d}d ${h%24}h until departure`}
-  return h>0?`${h}h ${m}m until departure`:`${m}m until departure`;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-function fmtTime(dt){
-  if(!dt)return '--:--';
-  return new Date(dt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-}
-function fmtDate(dt){
-  if(!dt)return '';
-  return new Date(dt).toLocaleDateString([],{month:'short',day:'numeric'});
-}
-function fmtDateTime(dt){
-  if(!dt)return '--';
-  return new Date(dt).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+function saveLive() { localStorage.setItem(LS_FLIGHTS, JSON.stringify(liveFlights)); }
+function saveSaved() { localStorage.setItem(LS_SAVED, JSON.stringify(savedFlights)); }
+function saveRecent() { localStorage.setItem(LS_RECENT, JSON.stringify(recentSearches)); }
+
+function addRecent(q) {
+  recentSearches = [q, ...recentSearches.filter(r => r !== q)].slice(0, 8);
+  saveRecent();
+  renderRecent();
 }
 
-// ===== LIVE FLIGHT SEARCH =====
-
-function getApiKey(){return localStorage.getItem(API_KEY_LS)||''}
-function saveApiKey(){
-  const k=$('apiKeyInput').value.trim();
-  if(k){localStorage.setItem(API_KEY_LS,k);toast('API key saved');$('apiBar').style.display='none'}
+function renderRecent() {
+  $('recentSearches').innerHTML = recentSearches.map(r =>
+    `<div class="recent-chip" onclick="searchFlight('${r}')">${r}</div>`
+  ).join('');
 }
 
-$('searchBtn').addEventListener('click', doSearch);
-$('searchInput').addEventListener('keydown', e=>{if(e.key==='Enter')doSearch()});
+function parseFlightCode(input) {
+  const clean = input.trim().toUpperCase().replace(/\s+/g, '');
+  const m = clean.match(/^([A-Z]{2}|\d[A-Z]|[A-Z]\d)(\d{1,4})$/);
+  if (m) return { carrier: m[1], number: m[2] };
+  return null;
+}
 
-async function doSearch(){
-  const q=$('searchInput').value.trim().toUpperCase().replace(/\s+/g,'');
-  if(!q)return;
-  
-  const panel=$('liveResult');
-  panel.classList.add('show');
-  panel.innerHTML=`<div class="live-card"><div class="live-loading"><div class="spinner"></div><br>Looking up <strong>${q}</strong>...</div></div>`;
-  
-  const apiKey=getApiKey();
-  
-  // Try AviationStack first if key exists
-  if(apiKey){
-    try{
-      const data = await fetchAviationStack(q, apiKey);
-      if(data){renderLiveResult(data, q);return}
-    }catch(e){console.warn('AviationStack failed:',e)}
+async function fetchFlightData(carrier, number) {
+  const url = `${FS_BASE}${carrier}/${number}`;
+  const resp = await fetch(`${PROXY}${encodeURIComponent(url)}`);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const data = await resp.json();
+  if (!data.contents) throw new Error('Empty response');
+
+  const match = data.contents.match(/__NEXT_DATA__\s*=\s*({.*?});/s);
+  if (!match) throw new Error('Could not parse flight data');
+
+  const nextData = JSON.parse(match[1]);
+  const ft = nextData.props?.initialState?.flightTracker;
+  if (!ft?.flight) throw new Error('No flight data found');
+  return ft;
+}
+
+function buildFlightCard(ft, isLive = true) {
+  const f = ft.flight;
+  const dep = f.departureAirport;
+  const arr = f.arrivalAirport;
+  const sched = f.schedule;
+  const stat = f.status;
+  const info = f.additionalFlightInfo;
+  const header = f.resultHeader;
+
+  const statusColor = stat.color === 'green' ? 'status-green' :
+                      stat.color === 'yellow' ? 'status-yellow' :
+                      stat.color === 'red' ? 'status-red' : 'status-blue';
+
+  const isFlying = f.flightNote?.tracking || f.flightState === 'active';
+  const isLanded = f.flightNote?.landed || f.flightState === 'completed';
+  const isFuture = f.flightState === 'future';
+
+  // Progress calc
+  let progress = 0;
+  if (isLanded) progress = 100;
+  else if (isFlying && sched.scheduledDepartureUTC && sched.scheduledArrivalUTC) {
+    const depT = new Date(sched.scheduledDepartureUTC).getTime();
+    const arrT = new Date(sched.scheduledArrivalUTC).getTime();
+    const now = Date.now();
+    progress = Math.min(95, Math.max(5, ((now - depT) / (arrT - depT)) * 100));
   }
-  
-  // Fallback: CORS proxy to Google
-  try{
-    const data = await fetchGoogleFlight(q);
-    if(data){renderLiveResult(data, q);return}
-  }catch(e){console.warn('Google scrape failed:',e)}
-  
-  // All failed
-  panel.innerHTML=`<div class="live-card"><div class="live-error">
-    <div style="font-size:32px;margin-bottom:8px">😕</div>
-    Could not fetch live data for <strong>${q}</strong><br>
-    <span style="font-size:12px;color:var(--text2)">Add an AviationStack API key for better results</span><br>
-    <button onclick="$('apiBar').style.display='flex'">Add API Key</button>
-    <button onclick="openAddModal('${q}')" style="margin-left:6px">Track Manually</button>
-  </div></div>`;
-}
 
-async function fetchAviationStack(flight, key){
-  // Free tier = HTTP only
-  const url=`http://api.aviationstack.com/v1/flights?access_key=${key}&flight_iata=${flight}`;
-  const resp=await fetch(url);
-  const json=await resp.json();
-  if(!json.data||!json.data.length)return null;
-  const f=json.data[0];
-  return {
-    flight: f.flight?.iata||flight,
-    airline: f.airline?.name||'',
-    status: (f.flight_status||'unknown').toLowerCase(),
-    depAirport: f.departure?.iata||'',
-    depCity: f.departure?.airport||'',
-    depTime: f.departure?.scheduled||'',
-    depActual: f.departure?.actual||f.departure?.estimated||'',
-    depTerminal: f.departure?.terminal||'',
-    depGate: f.departure?.gate||'',
-    depDelay: f.departure?.delay||0,
-    arrAirport: f.arrival?.iata||'',
-    arrCity: f.arrival?.airport||'',
-    arrTime: f.arrival?.scheduled||'',
-    arrActual: f.arrival?.actual||f.arrival?.estimated||'',
-    arrTerminal: f.arrival?.terminal||'',
-    arrGate: f.arrival?.gate||'',
-    arrDelay: f.arrival?.delay||0,
-    aircraft: f.aircraft?.registration||f.aircraft?.iata||'',
-    aircraftType: f.aircraft?.iata||'',
-    source: 'aviationstack'
-  };
-}
+  // Countdown
+  let countdown = '';
+  if (isFuture && sched.scheduledDepartureUTC) {
+    const diff = new Date(sched.scheduledDepartureUTC) - new Date();
+    if (diff > 0) {
+      const h = Math.floor(diff / 36e5), m = Math.floor((diff % 36e5) / 6e4);
+      if (h > 48) { const d = Math.floor(h / 24); countdown = `${d}d ${h % 24}h until departure`; }
+      else countdown = h > 0 ? `${h}h ${m}m until departure` : `${m}m until departure`;
+    }
+  }
 
-async function fetchGoogleFlight(flight){
-  const proxyUrl=`https://corsproxy.io/?url=${encodeURIComponent('https://www.google.com/search?q=flight+'+flight)}`;
-  const resp=await fetch(proxyUrl,{headers:{'User-Agent':'Mozilla/5.0'}});
-  const html=await resp.text();
-  return parseGoogleFlightHtml(html, flight);
-}
+  // Times
+  const depSched = dep.times?.scheduled ? `${dep.times.scheduled.time24} ${dep.times.scheduled.timezone}` : '--:--';
+  const arrSched = arr.times?.scheduled ? `${arr.times.scheduled.time24} ${arr.times.scheduled.timezone}` : '--:--';
+  const depActual = dep.times?.estimatedActual?.time24 ? `${dep.times.estimatedActual.time24} ${dep.times.estimatedActual.timezone || ''}` : null;
+  const arrActual = arr.times?.estimatedActual?.time24 ? `${arr.times.estimatedActual.time24} ${arr.times.estimatedActual.timezone || ''}` : null;
 
-function parseGoogleFlightHtml(html, flight){
-  // Google shows flight info in structured divs. Parse what we can.
-  const doc=new DOMParser().parseFromString(html,'text/html');
-  const text=doc.body.innerText||doc.body.textContent||'';
-  
-  // Try to extract airports (3-letter codes)
-  const airportMatch=text.match(/([A-Z]{3})\s*(?:to|→|–|—|-)\s*([A-Z]{3})/);
-  const depAirport=airportMatch?airportMatch[1]:'';
-  const arrAirport=airportMatch?airportMatch[2]:'';
-  
-  // Status detection
-  let status='unknown';
-  const tl=text.toLowerCase();
-  if(tl.includes('landed')||tl.includes('arrived'))status='landed';
-  else if(tl.includes('in air')||tl.includes('in flight')||tl.includes('en route'))status='in-flight';
-  else if(tl.includes('departed')||tl.includes('took off'))status='departed';
-  else if(tl.includes('delayed'))status='delayed';
-  else if(tl.includes('cancelled')||tl.includes('canceled'))status='cancelled';
-  else if(tl.includes('scheduled')||tl.includes('on time'))status='scheduled';
-  else if(tl.includes('boarding'))status='boarding';
-  
-  // Time extraction — look for patterns like "12:30 PM" or "14:30"
-  const times=text.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?/g)||[];
-  
-  // Terminal/Gate
-  const termMatch=text.match(/[Tt]erminal\s+(\w+)/);
-  const gateMatch=text.match(/[Gg]ate\s+(\w+)/);
-  
-  // Delay
-  const delayMatch=text.match(/(\d+)\s*(?:min|minute).*(?:delay|late)/i);
-  
-  // Airline from flight code
-  const airlines={WS:'WestJet',AC:'Air Canada',AA:'American Airlines',UA:'United Airlines',DL:'Delta Air Lines',SW:'Southwest',BA:'British Airways',LH:'Lufthansa',AF:'Air France',EK:'Emirates',QR:'Qatar Airways',WN:'Southwest',B6:'JetBlue',AS:'Alaska Airlines',F8:'Flair Airlines',PD:'Porter Airlines'};
-  const alCode=flight.replace(/\d+/g,'');
-  const airline=airlines[alCode]||alCode;
-  
-  // City names — try to find them near airport codes
-  const cityPatterns=[
-    /([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\s*\([A-Z]{3}\)/g,
-    /([A-Z]{3})\s*[-–]\s*([A-Za-z\s]+?)(?:\s|$)/g
-  ];
-  let depCity='', arrCity='';
-  const cityMatches=[...text.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){0,2})\s*\([A-Z]{3}\)/g)];
-  if(cityMatches.length>=2){depCity=cityMatches[0][1];arrCity=cityMatches[1][1]}
-  
-  // If we got basically nothing useful, check if at least status or airports were found
-  if(!depAirport && status==='unknown') return null;
-  
-  return {
-    flight,
-    airline,
-    status,
-    depAirport,
-    depCity,
-    depTime: times[0]||'',
-    depActual: times[1]||'',
-    depTerminal: termMatch?termMatch[1]:'',
-    depGate: gateMatch?gateMatch[1]:'',
-    depDelay: delayMatch?parseInt(delayMatch[1]):0,
-    arrAirport,
-    arrCity,
-    arrTime: times[2]||times[1]||'',
-    arrActual: times[3]||times[2]||'',
-    arrTerminal: '',
-    arrGate: '',
-    arrDelay: 0,
-    aircraft: '',
-    aircraftType: '',
-    source: 'google'
-  };
-}
+  const depTimeHtml = depActual && depActual !== depSched
+    ? `<div class="time-delayed">${depSched}</div><div class="time-actual">${depActual}</div>`
+    : `<div class="time">${depSched}</div>`;
+  const arrTimeHtml = arrActual && arrActual !== arrSched
+    ? `<div class="time-delayed">${arrSched}</div><div class="time-actual">${arrActual}</div>`
+    : `<div class="time">${arrSched}</div>`;
 
-function renderLiveResult(data, query){
-  lastLiveData=data;
-  const panel=$('liveResult');
-  const s=data.status||'unknown';
-  const sClass=s.replace(/\s+/g,'-');
-  const emoji=statusEmoji[sClass]||'❓';
-  const label=statusLabel[sClass]||s.charAt(0).toUpperCase()+s.slice(1);
-  
-  let detailsHtml='<div class="detail-grid">';
-  
-  if(data.depTime) detailsHtml+=`<div class="detail-item"><div class="label">Scheduled Dep</div><div class="value">${fmtDateTime(data.depTime)||data.depTime}</div></div>`;
-  if(data.arrTime) detailsHtml+=`<div class="detail-item"><div class="label">Scheduled Arr</div><div class="value">${fmtDateTime(data.arrTime)||data.arrTime}</div></div>`;
-  if(data.depActual && data.depActual!==data.depTime) detailsHtml+=`<div class="detail-item"><div class="label">Actual Dep</div><div class="value">${fmtDateTime(data.depActual)||data.depActual}</div></div>`;
-  if(data.arrActual && data.arrActual!==data.arrTime) detailsHtml+=`<div class="detail-item"><div class="label">Actual Arr</div><div class="value">${fmtDateTime(data.arrActual)||data.arrActual}</div></div>`;
-  if(data.depTerminal) detailsHtml+=`<div class="detail-item"><div class="label">Dep Terminal</div><div class="value">${data.depTerminal}</div></div>`;
-  if(data.depGate) detailsHtml+=`<div class="detail-item"><div class="label">Dep Gate</div><div class="value">${data.depGate}</div></div>`;
-  if(data.arrTerminal) detailsHtml+=`<div class="detail-item"><div class="label">Arr Terminal</div><div class="value">${data.arrTerminal}</div></div>`;
-  if(data.arrGate) detailsHtml+=`<div class="detail-item"><div class="label">Arr Gate</div><div class="value">${data.arrGate}</div></div>`;
-  if(data.depDelay>0) detailsHtml+=`<div class="detail-item"><div class="label">⚠️ Dep Delay</div><div class="value" style="color:var(--danger)">${data.depDelay} min</div></div>`;
-  if(data.arrDelay>0) detailsHtml+=`<div class="detail-item"><div class="label">⚠️ Arr Delay</div><div class="value" style="color:var(--danger)">${data.arrDelay} min</div></div>`;
-  if(data.aircraft) detailsHtml+=`<div class="detail-item"><div class="label">Aircraft</div><div class="value">${data.aircraft}${data.aircraftType?' ('+data.aircraftType+')':''}</div></div>`;
-  if(data.airline) detailsHtml+=`<div class="detail-item"><div class="label">Airline</div><div class="value">${data.airline}</div></div>`;
-  
-  detailsHtml+='</div>';
-  
-  const isActive=['in-flight','departed','active'].includes(sClass);
-  const routePlane=isActive?'<div class="plane">✈️</div>':'<div class="plane" style="animation:none;left:50%;font-size:14px;opacity:.4">· · ·</div>';
-  
-  panel.innerHTML=`<div class="live-card">
+  const flightId = `${header.carrier.fs}${header.flightNumber}`;
+  const isSaved = savedFlights.some(s => s.id === flightId);
+
+  // Codeshares
+  let codeshareHtml = '';
+  if (f.codeshares?.length) {
+    codeshareHtml = `<div class="codeshares">Also marketed as: <strong>${f.codeshares.map(c => `${c.fs} ${c.flightNumber}`).join(', ')}</strong></div>`;
+  }
+
+  return `
+  <div class="flight-card" data-id="${flightId}">
+    <div class="card-actions">
+      <button onclick="toggleSave('${flightId}')" title="${isSaved ? 'Unsave' : 'Save'}">${isSaved ? '⭐' : '☆'}</button>
+      <button onclick="removeLive('${flightId}')" title="Remove">✕</button>
+    </div>
     <div class="card-header">
       <div>
-        <div class="flight-num">${data.flight}</div>
-        ${data.airline?`<div class="airline-name">${data.airline}</div>`:''}
+        <div class="flight-num">${header.carrier.fs} ${header.flightNumber}</div>
+        <div class="airline-name">${header.carrier.name}</div>
       </div>
-      <div class="status-badge status-${sClass}">${emoji} ${label}</div>
+      <div class="status-badge ${statusColor}">${stat.status}${stat.statusDescription ? ' · ' + stat.statusDescription : ''}</div>
     </div>
     <div class="route">
       <div class="airport">
-        <div class="code">${data.depAirport||'???'}</div>
-        <div class="city">${data.depCity||''}</div>
-        <div class="time">${data.depActual||data.depTime||'--:--'}</div>
+        <div class="code">${dep.fs}</div>
+        <div class="city">${dep.city}${dep.state ? ', ' + dep.state : ''}</div>
+        <div class="time-label">Departure</div>
+        ${depTimeHtml}
       </div>
-      <div class="route-line">${routePlane}</div>
+      <div class="route-line">
+        <div class="plane ${isFlying ? 'flying' : ''}" style="${isLanded ? 'left:95%' : isFlying ? '' : 'left:5%;animation:none'}">${isFlying ? '✈️' : isLanded ? '🛬' : '✈️'}</div>
+      </div>
       <div class="airport">
-        <div class="code">${data.arrAirport||'???'}</div>
-        <div class="city">${data.arrCity||''}</div>
-        <div class="time">${data.arrActual||data.arrTime||'--:--'}</div>
+        <div class="code">${arr.fs}</div>
+        <div class="city">${arr.city}${arr.state ? ', ' + arr.state : ''}</div>
+        <div class="time-label">Arrival</div>
+        ${arrTimeHtml}
       </div>
     </div>
-    ${detailsHtml}
-    <div style="margin-top:10px;font-size:11px;color:var(--text2);text-align:right">via ${data.source==='aviationstack'?'AviationStack':'Google'}</div>
-    <div class="live-actions">
-      <button class="btn-track" onclick="trackFromLive()">📌 Track</button>
-      <button class="btn-refresh" onclick="doSearch()">🔄 Refresh</button>
-      <button class="btn-close" onclick="closeLive()">✕</button>
+    ${(isFlying || isLanded) ? `<div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>` : ''}
+    <div class="detail-grid">
+      ${dep.terminal ? `<div class="detail-item"><div class="label">Terminal</div><div class="value">${dep.terminal}</div></div>` : ''}
+      ${dep.gate ? `<div class="detail-item"><div class="label">Dep Gate</div><div class="value">${dep.gate}</div></div>` : ''}
+      ${arr.gate ? `<div class="detail-item"><div class="label">Arr Gate</div><div class="value">${arr.gate}</div></div>` : ''}
+      ${arr.terminal ? `<div class="detail-item"><div class="label">Arr Term</div><div class="value">${arr.terminal}</div></div>` : ''}
+      ${arr.baggage ? `<div class="detail-item"><div class="label">Baggage</div><div class="value">${arr.baggage}</div></div>` : ''}
+      ${info?.equipment?.name ? `<div class="detail-item"><div class="label">Aircraft</div><div class="value">${info.equipment.name}</div></div>` : ''}
+      ${info?.flightDuration ? `<div class="detail-item"><div class="label">Duration</div><div class="value">${info.flightDuration}</div></div>` : ''}
+      ${stat.delay?.departure?.minutes > 0 ? `<div class="detail-item"><div class="label">Delay</div><div class="value" style="color:var(--danger)">${stat.delay.departure.minutes}m</div></div>` : ''}
     </div>
+    ${codeshareHtml}
+    ${countdown ? `<div class="countdown">⏱ ${countdown}</div>` : ''}
   </div>`;
 }
 
-function closeLive(){$('liveResult').classList.remove('show');$('liveResult').innerHTML='';lastLiveData=null}
-
-function trackFromLive(){
-  if(!lastLiveData)return;
-  const d=lastLiveData;
-  const mapStatus={'active':'in-flight','landed':'landed','scheduled':'scheduled','cancelled':'cancelled','delayed':'delayed','departed':'departed','boarding':'boarding','in-flight':'in-flight'};
-  const f={
-    id:crypto.randomUUID(),
-    num:d.flight,
-    from:d.depAirport,
-    to:d.arrAirport,
-    fromCity:d.depCity,
-    toCity:d.arrCity,
-    depart:d.depTime||'',
-    arrive:d.arrTime||'',
-    status:mapStatus[d.status]||'scheduled',
-    gate:d.depGate,
-    notes:`${d.airline||''} ${d.aircraft?'• '+d.aircraft:''} ${d.depTerminal?'• T'+d.depTerminal:''}`.trim()
-  };
-  // Don't add duplicates
-  if(flights.some(x=>x.num===f.num)){
-    const idx=flights.findIndex(x=>x.num===f.num);
-    f.id=flights[idx].id;
-    flights[idx]=f;
-    toast('Flight updated from live data ✈️');
-  }else{
-    flights.push(f);
-    toast('Flight tracked ✈️');
-  }
-  save();render();closeLive();
-}
-
-// ===== RENDER TRACKED FLIGHTS =====
-
-function render(){
-  const c=$('cards');
-  const filtered=flights.filter(f=>{
-    if(currentFilter==='active')return !['landed','cancelled'].includes(f.status);
-    if(currentFilter==='completed')return ['landed','cancelled'].includes(f.status);
-    return true;
-  }).sort((a,b)=>{
-    const ta=a.depart?new Date(a.depart):new Date('2099-01-01');
-    const tb=b.depart?new Date(b.depart):new Date('2099-01-01');
-    return ta-tb;
-  });
-
-  if(!filtered.length){
-    c.innerHTML=`<div class="empty"><div class="icon">✈️</div><p>${flights.length?'No flights in this category':'Search a flight number above to get started'}</p></div>`;
+function render() {
+  const c = $('cards');
+  if (isLoading) {
+    c.innerHTML = `<div class="loading"><div class="spinner"></div>Fetching flight data...</div>`;
     return;
   }
 
-  c.innerHTML=filtered.map(f=>{
-    const cd=(['scheduled','boarding','delayed'].includes(f.status))?countdown(f.depart):null;
-    const progress=f.status==='in-flight';
-    return `
-    <div class="flight-card" data-id="${f.id}">
-      <div class="card-actions">
-        <button onclick="refreshFlight('${f.num}')" title="Refresh">🔄</button>
-        <button onclick="editFlight('${f.id}')" title="Edit">✏️</button>
-        <button onclick="deleteFlight('${f.id}')" title="Delete">🗑</button>
-      </div>
-      <div class="card-header">
-        <div class="flight-num">${f.num||'---'}</div>
-        <div class="status-badge status-${f.status}">${statusEmoji[f.status]||'❓'} ${statusLabel[f.status]||f.status}</div>
-      </div>
-      <div class="route">
-        <div class="airport">
-          <div class="code">${f.from||'---'}</div>
-          <div class="city">${f.fromCity||''}</div>
-          <div class="time">${fmtTime(f.depart)}</div>
-        </div>
-        <div class="route-line">${progress?'<div class="plane">✈️</div>':'<div class="plane" style="animation:none;left:50%;font-size:14px;opacity:.4">· · ·</div>'}</div>
-        <div class="airport">
-          <div class="code">${f.to||'---'}</div>
-          <div class="city">${f.toCity||''}</div>
-          <div class="time">${fmtTime(f.arrive)}</div>
-        </div>
-      </div>
-      <div class="card-meta">
-        ${f.depart?`<div class="meta-item">📆 <strong>${fmtDate(f.depart)}</strong></div>`:''}
-        ${f.gate?`<div class="meta-item">🚪 Gate <strong>${f.gate}</strong></div>`:''}
-        ${f.notes?`<div class="meta-item">📝 ${f.notes}</div>`:''}
-      </div>
-      ${cd?`<div class="countdown">⏱ ${cd}</div>`:''}
-    </div>`;
-  }).join('');
+  if (currentFilter === 'live') {
+    if (!liveFlights.length) {
+      c.innerHTML = `<div class="empty"><div class="icon">✈️</div><p>Search for a flight to get started.<br>Try AC226, WS137, UA100...</p></div>`;
+    } else {
+      c.innerHTML = liveFlights.map(f => buildFlightCard(f, true)).join('');
+    }
+  } else {
+    if (!savedFlights.length) {
+      c.innerHTML = `<div class="empty"><div class="icon">⭐</div><p>No saved flights yet.<br>Star a flight to save it here.</p></div>`;
+    } else {
+      c.innerHTML = savedFlights.map(f => buildFlightCard(f, false)).join('');
+    }
+  }
 
-  $('subtitle').textContent=`Tracking ${flights.length} flight${flights.length!==1?'s':''}`;
+  const total = liveFlights.length + savedFlights.length;
+  $('subtitle').textContent = total ? `Tracking ${total} flight${total !== 1 ? 's' : ''}` : 'Live flight tracking';
 }
 
-// Refresh a tracked flight with live data
-async function refreshFlight(num){
-  toast('Refreshing '+num+'...');
-  $('searchInput').value=num;
-  await doSearch();
+async function searchFlight(query) {
+  const q = query || $('searchInput').value;
+  const parsed = parseFlightCode(q);
+  if (!parsed) { toast('Invalid flight number'); return; }
+
+  $('searchInput').value = `${parsed.carrier}${parsed.number}`;
+  addRecent(`${parsed.carrier}${parsed.number}`);
+  isLoading = true;
+  render();
+
+  try {
+    const ft = await fetchFlightData(parsed.carrier, parsed.number);
+    const flightId = `${parsed.carrier}${parsed.number}`;
+    liveFlights = liveFlights.filter(f => {
+      const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
+      return fid !== flightId;
+    });
+    liveFlights.unshift(ft);
+    saveLive();
+    currentFilter = 'live';
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'live'));
+    toast('Flight data loaded ✈️');
+  } catch (err) {
+    toast('Could not find flight: ' + err.message);
+  }
+
+  isLoading = false;
+  render();
 }
 
-// Modal
-$('fab').addEventListener('click', ()=>openAddModal(''));
-function openAddModal(num){
-  editId=null;closeLive();
-  $('modalTitle').textContent='Add Flight';
-  $('fNum').value=num||'';$('fFrom').value='';$('fTo').value='';
-  $('fFromCity').value='';$('fToCity').value='';
-  $('fDepart').value='';$('fArrive').value='';
-  $('fStatus').value='scheduled';$('fGate').value='';$('fNotes').value='';
-  $('modal').classList.add('show');
-}
-function closeModal(){$('modal').classList.remove('show')}
-$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
-
-$('saveBtn').addEventListener('click',()=>{
-  const f={
-    id:editId||crypto.randomUUID(),
-    num:$('fNum').value.trim().toUpperCase(),
-    from:$('fFrom').value.trim().toUpperCase(),
-    to:$('fTo').value.trim().toUpperCase(),
-    fromCity:$('fFromCity').value.trim(),
-    toCity:$('fToCity').value.trim(),
-    depart:$('fDepart').value,
-    arrive:$('fArrive').value,
-    status:$('fStatus').value,
-    gate:$('fGate').value.trim(),
-    notes:$('fNotes').value.trim()
-  };
-  if(!f.num){toast('Flight number required');return}
-  if(editId){const i=flights.findIndex(x=>x.id===editId);if(i>=0)flights[i]=f}
-  else flights.push(f);
-  save();render();closeModal();
-  toast(editId?'Flight updated':'Flight added ✈️');
-});
-
-function editFlight(id){
-  const f=flights.find(x=>x.id===id);if(!f)return;
-  editId=id;$('modalTitle').textContent='Edit Flight';
-  $('fNum').value=f.num;$('fFrom').value=f.from;$('fTo').value=f.to;
-  $('fFromCity').value=f.fromCity;$('fToCity').value=f.toCity;
-  $('fDepart').value=f.depart;$('fArrive').value=f.arrive;
-  $('fStatus').value=f.status;$('fGate').value=f.gate;$('fNotes').value=f.notes;
-  $('modal').classList.add('show');
+function removeLive(id) {
+  liveFlights = liveFlights.filter(f => {
+    const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
+    return fid !== id;
+  });
+  saveLive();
+  render();
+  toast('Flight removed');
 }
 
-function deleteFlight(id){
-  flights=flights.filter(x=>x.id!==id);save();render();toast('Flight removed');
+function toggleSave(id) {
+  const existing = savedFlights.findIndex(f => {
+    const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
+    return fid === id;
+  });
+  if (existing >= 0) {
+    savedFlights.splice(existing, 1);
+    saveSaved();
+    render();
+    toast('Removed from saved');
+  } else {
+    const flight = liveFlights.find(f => {
+      const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
+      return fid === id;
+    });
+    if (flight) {
+      savedFlights.unshift(flight);
+      saveSaved();
+      render();
+      toast('Saved ⭐');
+    }
+  }
 }
 
-// Tabs
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');currentFilter=t.dataset.filter;render();
+// Refresh all live flights
+async function refreshAll() {
+  toast('Refreshing...');
+  const toRefresh = [...liveFlights];
+  for (const ft of toRefresh) {
+    const carrier = ft.flight.resultHeader.carrier.fs;
+    const number = ft.flight.resultHeader.flightNumber;
+    try {
+      const updated = await fetchFlightData(carrier, number);
+      const idx = liveFlights.findIndex(f =>
+        f.flight.resultHeader.carrier.fs === carrier &&
+        f.flight.resultHeader.flightNumber === number
+      );
+      if (idx >= 0) liveFlights[idx] = updated;
+    } catch (e) { /* keep old data */ }
+  }
+  saveLive();
+  render();
+  toast('Refreshed ✅');
+}
+
+// Search handlers
+$('searchBtn').addEventListener('click', () => searchFlight());
+$('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchFlight(); });
+
+// Tab handlers
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    currentFilter = t.dataset.filter;
+    render();
   });
 });
 
-// Settings toggle (long-press on header)
-let headerTimer;
-document.querySelector('.header').addEventListener('touchstart',()=>{
-  headerTimer=setTimeout(()=>{
-    const ab=$('apiBar');
-    ab.style.display=ab.style.display==='none'?'flex':'none';
-    if(ab.style.display==='flex')$('apiKeyInput').value=getApiKey();
-  },800);
-});
-document.querySelector('.header').addEventListener('touchend',()=>clearTimeout(headerTimer));
-document.querySelector('.header').addEventListener('mousedown',()=>{
-  headerTimer=setTimeout(()=>{
-    const ab=$('apiBar');
-    ab.style.display=ab.style.display==='none'?'flex':'none';
-    if(ab.style.display==='flex')$('apiKeyInput').value=getApiKey();
-  },800);
-});
-document.querySelector('.header').addEventListener('mouseup',()=>clearTimeout(headerTimer));
+// FAB = refresh
+$('fab').addEventListener('click', refreshAll);
 
 // Countdown ticker
-setInterval(render,60000);
+setInterval(render, 60000);
 
-// Pull-to-refresh
-let touchStart=0;
-document.addEventListener('touchstart',e=>{if(window.scrollY===0)touchStart=e.touches[0].clientY});
-document.addEventListener('touchmove',e=>{if(touchStart&&e.touches[0].clientY-touchStart>80)$('ptr').classList.add('show')});
-document.addEventListener('touchend',()=>{
-  if($('ptr').classList.contains('show')){render();setTimeout(()=>$('ptr').classList.remove('show'),800)}
-  touchStart=0;
-});
-
-// Service Worker
-if('serviceWorker' in navigator){
-  const sw=new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));`],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(sw)).catch(()=>{});
-}
-
+// Init
+renderRecent();
 render();
 </script>
 </body>
