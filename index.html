@@ -13,17 +13,13 @@
 :root{--bg:#0a0e1a;--card:#141828;--card2:#1a2035;--accent:#6c63ff;--accent2:#00d4aa;--text:#e8eaf6;--text2:#8892b0;--danger:#ff5252;--warn:#ffab40;--success:#69f0ae;--radius:16px;--shadow:0 8px 32px rgba(0,0,0,.4)}
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-
-/* Scrollbar */
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
 
-/* Header */
 .header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--bg) 60%,transparent);padding:20px 16px 30px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .header h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:10px}
 .header h1 span{font-size:24px;-webkit-text-fill-color:initial}
 .header p{color:var(--text2);font-size:13px;margin-top:4px}
 
-/* Search */
 .search-wrap{margin:0 16px 8px;position:relative}
 .search-wrap input{width:100%;padding:16px 54px 16px 20px;border:2px solid transparent;border-radius:var(--radius);background:var(--card);color:var(--text);font-size:16px;outline:none;transition:.3s}
 .search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(108,99,255,.15)}
@@ -31,12 +27,37 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .search-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
 .search-btn:active{transform:translateY(-50%) scale(.9)}
 
+/* Live result panel */
+.live-result{margin:12px 16px;padding:0;display:none;animation:slideUp .4s ease}
+.live-result.show{display:block}
+.live-card{background:var(--card);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.live-card .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.live-card .flight-num{font-size:22px;font-weight:800;letter-spacing:1px}
+.live-card .airline-name{font-size:13px;color:var(--text2);margin-top:2px}
+.live-loading{text-align:center;padding:30px;color:var(--accent)}
+.live-loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--card2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-error{text-align:center;padding:20px;color:var(--danger);font-size:14px}
+.live-error button{margin-top:10px;padding:8px 20px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.detail-item{background:var(--card2);border-radius:12px;padding:12px}
+.detail-item .label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.detail-item .value{font-size:15px;font-weight:700}
+.detail-item.full{grid-column:1/-1}
+
+.live-actions{display:flex;gap:8px;margin-top:14px}
+.live-actions button{flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.live-actions button:active{transform:scale(.96)}
+.btn-track{background:var(--accent);color:#fff}
+.btn-close{background:rgba(255,255,255,.06);color:var(--text2)}
+.btn-refresh{background:rgba(0,212,170,.12);color:var(--accent2)}
+
 /* Tabs */
 .tabs{display:flex;margin:16px 16px 8px;gap:8px}
 .tab{flex:1;padding:10px;border:none;border-radius:12px;background:var(--card);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.3s}
 .tab.active{background:var(--accent);color:#fff}
 
-/* Cards */
 .cards{padding:8px 16px 100px;display:flex;flex-direction:column;gap:12px}
 .flight-card{background:var(--card);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;animation:slideUp .4s ease;transition:transform .2s}
 .flight-card:active{transform:scale(.98)}
@@ -52,6 +73,8 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .status-landed{background:rgba(105,240,174,.15);color:var(--success)}
 .status-delayed{background:rgba(255,82,82,.15);color:var(--danger)}
 .status-cancelled{background:rgba(255,82,82,.2);color:var(--danger)}
+.status-active{background:rgba(0,212,170,.2);color:var(--accent2)}
+.status-unknown{background:rgba(255,255,255,.06);color:var(--text2)}
 
 .route{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .airport{text-align:center;flex:1}
@@ -73,7 +96,6 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .card-actions button{width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.05);color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
 .card-actions button:hover{background:rgba(255,82,82,.15);color:var(--danger)}
 
-/* Empty */
 .empty{text-align:center;padding:60px 20px;color:var(--text2)}
 .empty .icon{font-size:64px;margin-bottom:16px;opacity:.5}
 .empty p{font-size:15px;line-height:1.6}
@@ -96,32 +118,28 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .btn-primary:active{transform:scale(.96)}
 .btn-secondary{background:rgba(255,255,255,.06);color:var(--text2)}
 
-/* Lookup panel */
-.lookup-results{margin:0 16px 12px;padding:16px;background:var(--card);border-radius:var(--radius);display:none;animation:slideUp .3s}
-.lookup-results h3{font-size:14px;color:var(--text2);margin-bottom:12px}
-.lookup-links{display:flex;flex-direction:column;gap:8px}
-.lookup-links a{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card2);border-radius:12px;color:var(--text);text-decoration:none;font-size:14px;font-weight:600;transition:.2s}
-.lookup-links a:active{transform:scale(.97)}
-.lookup-links a .arrow{margin-left:auto;color:var(--text2)}
-
-/* FAB */
 .fab{position:fixed;bottom:24px;right:20px;width:56px;height:56px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:28px;cursor:pointer;box-shadow:0 8px 24px rgba(108,99,255,.4);z-index:50;display:flex;align-items:center;justify-content:center;transition:.2s}
 .fab:active{transform:scale(.9)}
 
-/* Pull to refresh indicator */
 .ptr{text-align:center;padding:12px;color:var(--accent);font-size:13px;font-weight:600;opacity:0;transition:.3s;height:0;overflow:hidden}
 .ptr.show{opacity:1;height:40px}
 
-/* Toast */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);color:var(--text);padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:300;transition:.3s;opacity:0;box-shadow:var(--shadow)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* API key input */
+.api-bar{margin:0 16px 12px;padding:12px 16px;background:var(--card);border-radius:var(--radius);display:flex;gap:8px;align-items:center}
+.api-bar input{flex:1;padding:10px 14px;border:2px solid rgba(255,255,255,.06);border-radius:10px;background:var(--bg);color:var(--text);font-size:13px;outline:none}
+.api-bar input:focus{border-color:var(--accent)}
+.api-bar button{padding:10px 16px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.api-bar .hint{font-size:11px;color:var(--text2)}
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1><span>✈️</span> FlightDeck</h1>
-  <p id="subtitle">Track your flights</p>
+  <p id="subtitle">Live flight tracking</p>
 </div>
 
 <div class="search-wrap">
@@ -129,18 +147,14 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   <button class="search-btn" id="searchBtn" aria-label="Search">🔍</button>
 </div>
 
-<div class="lookup-results" id="lookupPanel">
-  <h3>🔎 Look up <strong id="lookupFlight"></strong> on:</h3>
-  <div class="lookup-links">
-    <a id="linkFA" href="#" target="_blank" rel="noopener">🟢 FlightAware <span class="arrow">→</span></a>
-    <a id="linkFR" href="#" target="_blank" rel="noopener">🟡 Flightradar24 <span class="arrow">→</span></a>
-    <a id="linkGoog" href="#" target="_blank" rel="noopener">🔵 Google Flights <span class="arrow">→</span></a>
-  </div>
-  <div class="modal-btns" style="margin-top:14px">
-    <button class="btn-primary" onclick="openAddModal(document.getElementById('searchInput').value.trim().toUpperCase())">➕ Track Manually</button>
-    <button class="btn-secondary" onclick="closeLookup()">Close</button>
-  </div>
+<!-- API Key config (collapsed by default) -->
+<div class="api-bar" id="apiBar" style="display:none">
+  <input type="text" id="apiKeyInput" placeholder="AviationStack API key (optional)">
+  <button onclick="saveApiKey()">Save</button>
 </div>
+
+<!-- Live search result -->
+<div class="live-result" id="liveResult"></div>
 
 <div class="tabs">
   <button class="tab active" data-filter="all">All</button>
@@ -196,20 +210,18 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 
 <script>
 const LS_KEY = 'flightdeck_flights';
+const API_KEY_LS = 'flightdeck_apikey';
 let flights = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
 let editId = null;
 let currentFilter = 'all';
+let lastLiveData = null;
 
 const $ = id => document.getElementById(id);
-const statusEmoji = {scheduled:'📅',boarding:'🚪',departed:'🛫','in-flight':'✈️',landed:'🛬',delayed:'⚠️',cancelled:'❌'};
-const statusLabel = {scheduled:'Scheduled',boarding:'Boarding',departed:'Departed','in-flight':'In Flight',landed:'Landed',delayed:'Delayed',cancelled:'Cancelled'};
+const statusEmoji = {scheduled:'📅',boarding:'🚪',departed:'🛫','in-flight':'✈️',landed:'🛬',delayed:'⚠️',cancelled:'❌',active:'✈️',unknown:'❓'};
+const statusLabel = {scheduled:'Scheduled',boarding:'Boarding',departed:'Departed','in-flight':'In Flight',landed:'Landed',delayed:'Delayed',cancelled:'Cancelled',active:'Active',unknown:'Unknown'};
 
 function save(){localStorage.setItem(LS_KEY, JSON.stringify(flights))}
-
-function toast(msg){
-  const t=$('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
-}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 
 function countdown(dep){
   if(!dep)return null;
@@ -228,6 +240,258 @@ function fmtDate(dt){
   if(!dt)return '';
   return new Date(dt).toLocaleDateString([],{month:'short',day:'numeric'});
 }
+function fmtDateTime(dt){
+  if(!dt)return '--';
+  return new Date(dt).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+// ===== LIVE FLIGHT SEARCH =====
+
+function getApiKey(){return localStorage.getItem(API_KEY_LS)||''}
+function saveApiKey(){
+  const k=$('apiKeyInput').value.trim();
+  if(k){localStorage.setItem(API_KEY_LS,k);toast('API key saved');$('apiBar').style.display='none'}
+}
+
+$('searchBtn').addEventListener('click', doSearch);
+$('searchInput').addEventListener('keydown', e=>{if(e.key==='Enter')doSearch()});
+
+async function doSearch(){
+  const q=$('searchInput').value.trim().toUpperCase().replace(/\s+/g,'');
+  if(!q)return;
+  
+  const panel=$('liveResult');
+  panel.classList.add('show');
+  panel.innerHTML=`<div class="live-card"><div class="live-loading"><div class="spinner"></div><br>Looking up <strong>${q}</strong>...</div></div>`;
+  
+  const apiKey=getApiKey();
+  
+  // Try AviationStack first if key exists
+  if(apiKey){
+    try{
+      const data = await fetchAviationStack(q, apiKey);
+      if(data){renderLiveResult(data, q);return}
+    }catch(e){console.warn('AviationStack failed:',e)}
+  }
+  
+  // Fallback: CORS proxy to Google
+  try{
+    const data = await fetchGoogleFlight(q);
+    if(data){renderLiveResult(data, q);return}
+  }catch(e){console.warn('Google scrape failed:',e)}
+  
+  // All failed
+  panel.innerHTML=`<div class="live-card"><div class="live-error">
+    <div style="font-size:32px;margin-bottom:8px">😕</div>
+    Could not fetch live data for <strong>${q}</strong><br>
+    <span style="font-size:12px;color:var(--text2)">Add an AviationStack API key for better results</span><br>
+    <button onclick="$('apiBar').style.display='flex'">Add API Key</button>
+    <button onclick="openAddModal('${q}')" style="margin-left:6px">Track Manually</button>
+  </div></div>`;
+}
+
+async function fetchAviationStack(flight, key){
+  // Free tier = HTTP only
+  const url=`http://api.aviationstack.com/v1/flights?access_key=${key}&flight_iata=${flight}`;
+  const resp=await fetch(url);
+  const json=await resp.json();
+  if(!json.data||!json.data.length)return null;
+  const f=json.data[0];
+  return {
+    flight: f.flight?.iata||flight,
+    airline: f.airline?.name||'',
+    status: (f.flight_status||'unknown').toLowerCase(),
+    depAirport: f.departure?.iata||'',
+    depCity: f.departure?.airport||'',
+    depTime: f.departure?.scheduled||'',
+    depActual: f.departure?.actual||f.departure?.estimated||'',
+    depTerminal: f.departure?.terminal||'',
+    depGate: f.departure?.gate||'',
+    depDelay: f.departure?.delay||0,
+    arrAirport: f.arrival?.iata||'',
+    arrCity: f.arrival?.airport||'',
+    arrTime: f.arrival?.scheduled||'',
+    arrActual: f.arrival?.actual||f.arrival?.estimated||'',
+    arrTerminal: f.arrival?.terminal||'',
+    arrGate: f.arrival?.gate||'',
+    arrDelay: f.arrival?.delay||0,
+    aircraft: f.aircraft?.registration||f.aircraft?.iata||'',
+    aircraftType: f.aircraft?.iata||'',
+    source: 'aviationstack'
+  };
+}
+
+async function fetchGoogleFlight(flight){
+  const proxyUrl=`https://corsproxy.io/?url=${encodeURIComponent('https://www.google.com/search?q=flight+'+flight)}`;
+  const resp=await fetch(proxyUrl,{headers:{'User-Agent':'Mozilla/5.0'}});
+  const html=await resp.text();
+  return parseGoogleFlightHtml(html, flight);
+}
+
+function parseGoogleFlightHtml(html, flight){
+  // Google shows flight info in structured divs. Parse what we can.
+  const doc=new DOMParser().parseFromString(html,'text/html');
+  const text=doc.body.innerText||doc.body.textContent||'';
+  
+  // Try to extract airports (3-letter codes)
+  const airportMatch=text.match(/([A-Z]{3})\s*(?:to|→|–|—|-)\s*([A-Z]{3})/);
+  const depAirport=airportMatch?airportMatch[1]:'';
+  const arrAirport=airportMatch?airportMatch[2]:'';
+  
+  // Status detection
+  let status='unknown';
+  const tl=text.toLowerCase();
+  if(tl.includes('landed')||tl.includes('arrived'))status='landed';
+  else if(tl.includes('in air')||tl.includes('in flight')||tl.includes('en route'))status='in-flight';
+  else if(tl.includes('departed')||tl.includes('took off'))status='departed';
+  else if(tl.includes('delayed'))status='delayed';
+  else if(tl.includes('cancelled')||tl.includes('canceled'))status='cancelled';
+  else if(tl.includes('scheduled')||tl.includes('on time'))status='scheduled';
+  else if(tl.includes('boarding'))status='boarding';
+  
+  // Time extraction — look for patterns like "12:30 PM" or "14:30"
+  const times=text.match(/\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?/g)||[];
+  
+  // Terminal/Gate
+  const termMatch=text.match(/[Tt]erminal\s+(\w+)/);
+  const gateMatch=text.match(/[Gg]ate\s+(\w+)/);
+  
+  // Delay
+  const delayMatch=text.match(/(\d+)\s*(?:min|minute).*(?:delay|late)/i);
+  
+  // Airline from flight code
+  const airlines={WS:'WestJet',AC:'Air Canada',AA:'American Airlines',UA:'United Airlines',DL:'Delta Air Lines',SW:'Southwest',BA:'British Airways',LH:'Lufthansa',AF:'Air France',EK:'Emirates',QR:'Qatar Airways',WN:'Southwest',B6:'JetBlue',AS:'Alaska Airlines',F8:'Flair Airlines',PD:'Porter Airlines'};
+  const alCode=flight.replace(/\d+/g,'');
+  const airline=airlines[alCode]||alCode;
+  
+  // City names — try to find them near airport codes
+  const cityPatterns=[
+    /([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\s*\([A-Z]{3}\)/g,
+    /([A-Z]{3})\s*[-–]\s*([A-Za-z\s]+?)(?:\s|$)/g
+  ];
+  let depCity='', arrCity='';
+  const cityMatches=[...text.matchAll(/([A-Z][a-z]+(?:\s[A-Z][a-z]+){0,2})\s*\([A-Z]{3}\)/g)];
+  if(cityMatches.length>=2){depCity=cityMatches[0][1];arrCity=cityMatches[1][1]}
+  
+  // If we got basically nothing useful, check if at least status or airports were found
+  if(!depAirport && status==='unknown') return null;
+  
+  return {
+    flight,
+    airline,
+    status,
+    depAirport,
+    depCity,
+    depTime: times[0]||'',
+    depActual: times[1]||'',
+    depTerminal: termMatch?termMatch[1]:'',
+    depGate: gateMatch?gateMatch[1]:'',
+    depDelay: delayMatch?parseInt(delayMatch[1]):0,
+    arrAirport,
+    arrCity,
+    arrTime: times[2]||times[1]||'',
+    arrActual: times[3]||times[2]||'',
+    arrTerminal: '',
+    arrGate: '',
+    arrDelay: 0,
+    aircraft: '',
+    aircraftType: '',
+    source: 'google'
+  };
+}
+
+function renderLiveResult(data, query){
+  lastLiveData=data;
+  const panel=$('liveResult');
+  const s=data.status||'unknown';
+  const sClass=s.replace(/\s+/g,'-');
+  const emoji=statusEmoji[sClass]||'❓';
+  const label=statusLabel[sClass]||s.charAt(0).toUpperCase()+s.slice(1);
+  
+  let detailsHtml='<div class="detail-grid">';
+  
+  if(data.depTime) detailsHtml+=`<div class="detail-item"><div class="label">Scheduled Dep</div><div class="value">${fmtDateTime(data.depTime)||data.depTime}</div></div>`;
+  if(data.arrTime) detailsHtml+=`<div class="detail-item"><div class="label">Scheduled Arr</div><div class="value">${fmtDateTime(data.arrTime)||data.arrTime}</div></div>`;
+  if(data.depActual && data.depActual!==data.depTime) detailsHtml+=`<div class="detail-item"><div class="label">Actual Dep</div><div class="value">${fmtDateTime(data.depActual)||data.depActual}</div></div>`;
+  if(data.arrActual && data.arrActual!==data.arrTime) detailsHtml+=`<div class="detail-item"><div class="label">Actual Arr</div><div class="value">${fmtDateTime(data.arrActual)||data.arrActual}</div></div>`;
+  if(data.depTerminal) detailsHtml+=`<div class="detail-item"><div class="label">Dep Terminal</div><div class="value">${data.depTerminal}</div></div>`;
+  if(data.depGate) detailsHtml+=`<div class="detail-item"><div class="label">Dep Gate</div><div class="value">${data.depGate}</div></div>`;
+  if(data.arrTerminal) detailsHtml+=`<div class="detail-item"><div class="label">Arr Terminal</div><div class="value">${data.arrTerminal}</div></div>`;
+  if(data.arrGate) detailsHtml+=`<div class="detail-item"><div class="label">Arr Gate</div><div class="value">${data.arrGate}</div></div>`;
+  if(data.depDelay>0) detailsHtml+=`<div class="detail-item"><div class="label">⚠️ Dep Delay</div><div class="value" style="color:var(--danger)">${data.depDelay} min</div></div>`;
+  if(data.arrDelay>0) detailsHtml+=`<div class="detail-item"><div class="label">⚠️ Arr Delay</div><div class="value" style="color:var(--danger)">${data.arrDelay} min</div></div>`;
+  if(data.aircraft) detailsHtml+=`<div class="detail-item"><div class="label">Aircraft</div><div class="value">${data.aircraft}${data.aircraftType?' ('+data.aircraftType+')':''}</div></div>`;
+  if(data.airline) detailsHtml+=`<div class="detail-item"><div class="label">Airline</div><div class="value">${data.airline}</div></div>`;
+  
+  detailsHtml+='</div>';
+  
+  const isActive=['in-flight','departed','active'].includes(sClass);
+  const routePlane=isActive?'<div class="plane">✈️</div>':'<div class="plane" style="animation:none;left:50%;font-size:14px;opacity:.4">· · ·</div>';
+  
+  panel.innerHTML=`<div class="live-card">
+    <div class="card-header">
+      <div>
+        <div class="flight-num">${data.flight}</div>
+        ${data.airline?`<div class="airline-name">${data.airline}</div>`:''}
+      </div>
+      <div class="status-badge status-${sClass}">${emoji} ${label}</div>
+    </div>
+    <div class="route">
+      <div class="airport">
+        <div class="code">${data.depAirport||'???'}</div>
+        <div class="city">${data.depCity||''}</div>
+        <div class="time">${data.depActual||data.depTime||'--:--'}</div>
+      </div>
+      <div class="route-line">${routePlane}</div>
+      <div class="airport">
+        <div class="code">${data.arrAirport||'???'}</div>
+        <div class="city">${data.arrCity||''}</div>
+        <div class="time">${data.arrActual||data.arrTime||'--:--'}</div>
+      </div>
+    </div>
+    ${detailsHtml}
+    <div style="margin-top:10px;font-size:11px;color:var(--text2);text-align:right">via ${data.source==='aviationstack'?'AviationStack':'Google'}</div>
+    <div class="live-actions">
+      <button class="btn-track" onclick="trackFromLive()">📌 Track</button>
+      <button class="btn-refresh" onclick="doSearch()">🔄 Refresh</button>
+      <button class="btn-close" onclick="closeLive()">✕</button>
+    </div>
+  </div>`;
+}
+
+function closeLive(){$('liveResult').classList.remove('show');$('liveResult').innerHTML='';lastLiveData=null}
+
+function trackFromLive(){
+  if(!lastLiveData)return;
+  const d=lastLiveData;
+  const mapStatus={'active':'in-flight','landed':'landed','scheduled':'scheduled','cancelled':'cancelled','delayed':'delayed','departed':'departed','boarding':'boarding','in-flight':'in-flight'};
+  const f={
+    id:crypto.randomUUID(),
+    num:d.flight,
+    from:d.depAirport,
+    to:d.arrAirport,
+    fromCity:d.depCity,
+    toCity:d.arrCity,
+    depart:d.depTime||'',
+    arrive:d.arrTime||'',
+    status:mapStatus[d.status]||'scheduled',
+    gate:d.depGate,
+    notes:`${d.airline||''} ${d.aircraft?'• '+d.aircraft:''} ${d.depTerminal?'• T'+d.depTerminal:''}`.trim()
+  };
+  // Don't add duplicates
+  if(flights.some(x=>x.num===f.num)){
+    const idx=flights.findIndex(x=>x.num===f.num);
+    f.id=flights[idx].id;
+    flights[idx]=f;
+    toast('Flight updated from live data ✈️');
+  }else{
+    flights.push(f);
+    toast('Flight tracked ✈️');
+  }
+  save();render();closeLive();
+}
+
+// ===== RENDER TRACKED FLIGHTS =====
 
 function render(){
   const c=$('cards');
@@ -242,7 +506,7 @@ function render(){
   });
 
   if(!filtered.length){
-    c.innerHTML=`<div class="empty"><div class="icon">✈️</div><p>${flights.length?'No flights in this category':'Search for a flight or tap + to start tracking'}</p></div>`;
+    c.innerHTML=`<div class="empty"><div class="icon">✈️</div><p>${flights.length?'No flights in this category':'Search a flight number above to get started'}</p></div>`;
     return;
   }
 
@@ -252,12 +516,13 @@ function render(){
     return `
     <div class="flight-card" data-id="${f.id}">
       <div class="card-actions">
+        <button onclick="refreshFlight('${f.num}')" title="Refresh">🔄</button>
         <button onclick="editFlight('${f.id}')" title="Edit">✏️</button>
         <button onclick="deleteFlight('${f.id}')" title="Delete">🗑</button>
       </div>
       <div class="card-header">
         <div class="flight-num">${f.num||'---'}</div>
-        <div class="status-badge status-${f.status}">${statusEmoji[f.status]} ${statusLabel[f.status]}</div>
+        <div class="status-badge status-${f.status}">${statusEmoji[f.status]||'❓'} ${statusLabel[f.status]||f.status}</div>
       </div>
       <div class="route">
         <div class="airport">
@@ -284,26 +549,17 @@ function render(){
   $('subtitle').textContent=`Tracking ${flights.length} flight${flights.length!==1?'s':''}`;
 }
 
-// Search
-$('searchBtn').addEventListener('click', doSearch);
-$('searchInput').addEventListener('keydown', e=>{if(e.key==='Enter')doSearch()});
-
-function doSearch(){
-  const q=$('searchInput').value.trim().toUpperCase();
-  if(!q)return;
-  const lp=$('lookupPanel');
-  $('lookupFlight').textContent=q;
-  $('linkFA').href=`https://flightaware.com/live/flight/${q}`;
-  $('linkFR').href=`https://www.flightradar24.com/${q}`;
-  $('linkGoog').href=`https://www.google.com/search?q=flight+${q}`;
-  lp.style.display='block';
+// Refresh a tracked flight with live data
+async function refreshFlight(num){
+  toast('Refreshing '+num+'...');
+  $('searchInput').value=num;
+  await doSearch();
 }
-function closeLookup(){$('lookupPanel').style.display='none'}
 
 // Modal
 $('fab').addEventListener('click', ()=>openAddModal(''));
 function openAddModal(num){
-  editId=null;closeLookup();
+  editId=null;closeLive();
   $('modalTitle').textContent='Add Flight';
   $('fNum').value=num||'';$('fFrom').value='';$('fTo').value='';
   $('fFromCity').value='';$('fToCity').value='';
@@ -357,23 +613,38 @@ document.querySelectorAll('.tab').forEach(t=>{
   });
 });
 
+// Settings toggle (long-press on header)
+let headerTimer;
+document.querySelector('.header').addEventListener('touchstart',()=>{
+  headerTimer=setTimeout(()=>{
+    const ab=$('apiBar');
+    ab.style.display=ab.style.display==='none'?'flex':'none';
+    if(ab.style.display==='flex')$('apiKeyInput').value=getApiKey();
+  },800);
+});
+document.querySelector('.header').addEventListener('touchend',()=>clearTimeout(headerTimer));
+document.querySelector('.header').addEventListener('mousedown',()=>{
+  headerTimer=setTimeout(()=>{
+    const ab=$('apiBar');
+    ab.style.display=ab.style.display==='none'?'flex':'none';
+    if(ab.style.display==='flex')$('apiKeyInput').value=getApiKey();
+  },800);
+});
+document.querySelector('.header').addEventListener('mouseup',()=>clearTimeout(headerTimer));
+
 // Countdown ticker
 setInterval(render,60000);
 
-// Pull-to-refresh feel
+// Pull-to-refresh
 let touchStart=0;
 document.addEventListener('touchstart',e=>{if(window.scrollY===0)touchStart=e.touches[0].clientY});
-document.addEventListener('touchmove',e=>{
-  if(touchStart&&e.touches[0].clientY-touchStart>80){
-    $('ptr').classList.add('show');
-  }
-});
+document.addEventListener('touchmove',e=>{if(touchStart&&e.touches[0].clientY-touchStart>80)$('ptr').classList.add('show')});
 document.addEventListener('touchend',()=>{
   if($('ptr').classList.contains('show')){render();setTimeout(()=>$('ptr').classList.remove('show'),800)}
   touchStart=0;
 });
 
-// Service Worker (inline)
+// Service Worker
 if('serviceWorker' in navigator){
   const sw=new Blob([`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));`],{type:'application/javascript'});
   navigator.serviceWorker.register(URL.createObjectURL(sw)).catch(()=>{});
