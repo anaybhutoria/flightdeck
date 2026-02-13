@@ -3,164 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0a0e1a">
+<meta name="theme-color" content="#09090b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>FlightDeck</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e1a;--card:#141828;--card2:#1a2035;--accent:#6c63ff;--accent2:#00d4aa;--text:#e8eaf6;--text2:#8892b0;--danger:#ff5252;--warn:#ffab40;--success:#69f0ae;--radius:16px;--shadow:0 8px 32px rgba(0,0,0,.4)}
-html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+:root{--bg:#09090b;--card:#18181b;--card2:#27272a;--border:#3f3f46;--accent:#3b82f6;--text:#fafafa;--text2:#a1a1aa;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--radius:12px}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:4px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-.header{position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--bg) 60%,transparent);padding:20px 16px 30px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.header h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:10px}
-.header h1 span{font-size:24px;-webkit-text-fill-color:initial}
-.header p{color:var(--text2);font-size:13px;margin-top:4px}
+.header{position:sticky;top:0;z-index:100;background:var(--bg);padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.header h1{font-size:20px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;justify-content:space-between}
+.header h1 .refresh-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.header h1 .refresh-btn:active{background:var(--card)}
+.header p{color:var(--text2);font-size:12px;margin-top:4px;font-weight:400}
 
-.search-wrap{margin:0 16px 16px;position:relative}
-.search-wrap input{width:100%;padding:16px 54px 16px 20px;border:2px solid transparent;border-radius:var(--radius);background:var(--card);color:var(--text);font-size:16px;outline:none;transition:.3s}
-.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(108,99,255,.15)}
+.search-wrap{padding:12px 16px;position:relative}
+.search-wrap input{width:100%;padding:12px 44px 12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-size:15px;outline:none;transition:.2s}
+.search-wrap input:focus{border-color:var(--accent)}
 .search-wrap input::placeholder{color:var(--text2)}
-.search-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:none;border-radius:12px;background:var(--accent);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-.search-btn:active{transform:translateY(-50%) scale(.9)}
+.search-btn{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.search-btn:active{opacity:.8}
+.search-btn svg{width:16px;height:16px}
 
-.tabs{display:flex;margin:0 16px 8px;gap:8px}
-.tab{flex:1;padding:10px;border:none;border-radius:12px;background:var(--card);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.3s}
+.recent-searches{padding:0 16px 8px;display:flex;gap:6px;flex-wrap:wrap}
+.recent-chip{padding:5px 12px;border-radius:6px;background:var(--card);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);transition:.2s}
+.recent-chip:active{border-color:var(--accent)}
+
+.tabs{display:flex;margin:4px 16px 12px;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.tab{flex:1;padding:8px;border:none;background:transparent;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
 .tab.active{background:var(--accent);color:#fff}
 
-.cards{padding:8px 16px 100px;display:flex;flex-direction:column;gap:12px}
+.cards{padding:0 16px 100px;display:flex;flex-direction:column;gap:10px}
 
-/* Loading */
-.loading{text-align:center;padding:40px 20px;color:var(--accent)}
-.loading .spinner{width:40px;height:40px;border:3px solid var(--card2);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+.loading{text-align:center;padding:40px 20px;color:var(--text2)}
+.loading .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Flight card */
-.flight-card{background:var(--card);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;animation:slideUp .4s ease;transition:transform .2s}
-.flight-card:active{transform:scale(.98)}
-@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.flight-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.flight-num{font-size:22px;font-weight:800;letter-spacing:1px}
-.airline-name{font-size:12px;color:var(--text2);margin-top:2px}
-.status-badge{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.status-green{background:rgba(105,240,174,.15);color:var(--success)}
-.status-yellow{background:rgba(255,171,64,.15);color:var(--warn)}
-.status-red{background:rgba(255,82,82,.15);color:var(--danger)}
-.status-blue{background:rgba(108,99,255,.15);color:var(--accent)}
+.card-top{padding:16px 16px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.card-top-left .flight-num{font-size:18px;font-weight:700;letter-spacing:.5px}
+.card-top-left .airline-name{font-size:12px;color:var(--text2);margin-top:1px}
+.card-top-right{display:flex;gap:6px;align-items:center}
+.status-pill{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.status-green{background:rgba(34,197,94,.12);color:var(--green)}
+.status-yellow{background:rgba(234,179,8,.12);color:var(--yellow)}
+.status-red{background:rgba(239,68,68,.12);color:var(--red)}
+.status-blue{background:rgba(59,130,246,.12);color:var(--accent)}
+.card-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.card-btn:active{background:var(--card2)}
+.card-btn.saved{color:var(--yellow);border-color:var(--yellow)}
 
-.route{display:flex;align-items:center;gap:8px;margin-bottom:16px}
-.airport{text-align:center;flex:1}
-.airport .code{font-size:26px;font-weight:800}
-.airport .city{font-size:11px;color:var(--text2);margin-top:2px}
-.airport .time{font-size:15px;color:var(--text);margin-top:6px;font-weight:600}
-.airport .time-label{font-size:10px;color:var(--text2)}
-.airport .time-actual{color:var(--success);font-size:13px}
-.airport .time-delayed{color:var(--danger);text-decoration:line-through;font-size:12px;opacity:.7}
-.route-line{flex:2;display:flex;align-items:center;position:relative;height:30px}
-.route-line::before{content:'';position:absolute;top:50%;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:1px}
-.route-line .plane{position:absolute;font-size:20px;top:50%;transform:translateY(-50%);filter:drop-shadow(0 0 6px var(--accent))}
-.route-line .plane.flying{animation:fly 3s ease-in-out infinite alternate}
-@keyframes fly{from{left:10%}to{left:80%}}
+.route-section{padding:16px;display:flex;align-items:center}
+.airport-block{flex:1}
+.airport-block.right{text-align:right}
+.airport-block .code{font-size:28px;font-weight:800;letter-spacing:1px;line-height:1}
+.airport-block .city{font-size:11px;color:var(--text2);margin-top:3px}
+.airport-block .time-row{margin-top:8px}
+.airport-block .time-sched{font-size:14px;font-weight:600}
+.airport-block .time-tz{font-size:11px;color:var(--text2);margin-left:2px}
+.airport-block .time-actual{font-size:13px;color:var(--green);font-weight:600}
+.airport-block .time-delayed{font-size:12px;color:var(--text2);text-decoration:line-through}
+.airport-block .time-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
 
-.progress-bar{width:100%;height:6px;background:var(--card2);border-radius:3px;margin:8px 0 16px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 1s ease}
+.route-middle{flex:0 0 80px;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative}
+.route-line-h{width:100%;height:1px;background:var(--border);position:relative}
+.route-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);position:absolute;top:-2.5px}
+.route-dot.left{left:0}.route-dot.right{right:0}
+.route-dur{font-size:10px;color:var(--text2);white-space:nowrap}
 
-.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-top:12px}
-.detail-item{background:var(--card2);border-radius:10px;padding:10px;text-align:center}
-.detail-item .label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
-.detail-item .value{font-size:14px;font-weight:700;margin-top:4px}
+.progress-bar{height:3px;background:var(--card2);margin:0 16px}
+.progress-fill{height:100%;background:var(--accent);transition:width 1s ease}
 
-.codeshares{margin-top:12px;padding:10px;background:var(--card2);border-radius:10px;font-size:12px;color:var(--text2)}
-.codeshares strong{color:var(--text)}
+.detail-strip{display:flex;gap:0;border-top:1px solid var(--border);margin-top:0}
+.detail-cell{flex:1;padding:10px 12px;text-align:center;border-right:1px solid var(--border)}
+.detail-cell:last-child{border-right:none}
+.detail-cell .dl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.detail-cell .dv{font-size:13px;font-weight:600;margin-top:2px}
 
-.countdown{margin-top:12px;padding:12px;border-radius:12px;background:rgba(108,99,255,.08);text-align:center;font-size:14px;color:var(--accent);font-weight:600}
+.codeshares-strip{padding:8px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text2)}
+.codeshares-strip span{color:var(--text);font-weight:500}
 
-.card-actions{position:absolute;top:12px;right:12px;display:flex;gap:6px}
-.card-actions button{width:32px;height:32px;border:none;border-radius:8px;background:rgba(255,255,255,.05);color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
-.card-actions button:hover{background:rgba(255,82,82,.15);color:var(--danger)}
+.countdown-strip{padding:8px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--accent);font-weight:600;text-align:center}
 
 .empty{text-align:center;padding:60px 20px;color:var(--text2)}
-.empty .icon{font-size:64px;margin-bottom:16px;opacity:.5}
-.empty p{font-size:15px;line-height:1.6}
+.empty p{font-size:14px;line-height:1.7}
+.empty .hint{font-size:12px;margin-top:8px;color:var(--border)}
 
-.error-msg{text-align:center;padding:30px 20px;color:var(--danger);background:var(--card);border-radius:var(--radius);margin:0 16px}
-
-.fab{position:fixed;bottom:24px;right:20px;width:56px;height:56px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:28px;cursor:pointer;box-shadow:0 8px 24px rgba(108,99,255,.4);z-index:50;display:flex;align-items:center;justify-content:center;transition:.2s}
-.fab:active{transform:scale(.9)}
-
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--card2);color:var(--text);padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:300;transition:.3s;opacity:0;box-shadow:var(--shadow)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card2);color:var(--text);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;z-index:300;transition:.3s;opacity:0;border:1px solid var(--border)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-.modal-overlay.show{display:flex;animation:fadeIn .2s}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--card);border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px 40px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;animation:slideModal .3s ease}
-@keyframes slideModal{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal h2{font-size:20px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:8px}
-.modal label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;font-weight:600}
-.modal input,.modal select{width:100%;padding:14px 16px;border:2px solid rgba(255,255,255,.06);border-radius:12px;background:var(--bg);color:var(--text);font-size:15px;outline:none;margin-bottom:16px;transition:.3s}
-.modal input:focus,.modal select:focus{border-color:var(--accent)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal-btns{display:flex;gap:10px;margin-top:8px}
-.modal-btns button{flex:1;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:active{transform:scale(.96)}
-.btn-secondary{background:rgba(255,255,255,.06);color:var(--text2)}
-
-.recent-searches{margin:0 16px 16px;display:flex;gap:8px;flex-wrap:wrap}
-.recent-chip{padding:6px 14px;border-radius:20px;background:var(--card);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid rgba(255,255,255,.06)}
-.recent-chip:hover{border-color:var(--accent);color:var(--text)}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1><span>✈️</span> FlightDeck</h1>
+  <h1>FlightDeck <button class="refresh-btn" onclick="refreshAll()" title="Refresh all">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+  </button></h1>
   <p id="subtitle">Live flight tracking</p>
 </div>
 
 <div class="search-wrap">
-  <input type="text" id="searchInput" placeholder="Flight number (e.g. AC226, WS137)" autocomplete="off" autocapitalize="characters" spellcheck="false">
-  <button class="search-btn" id="searchBtn" aria-label="Search">🔍</button>
+  <input type="text" id="searchInput" placeholder="Enter flight number (e.g. AC226)" autocomplete="off" autocapitalize="characters" spellcheck="false">
+  <button class="search-btn" id="searchBtn" aria-label="Search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </button>
 </div>
 
 <div class="recent-searches" id="recentSearches"></div>
 
 <div class="tabs">
-  <button class="tab active" data-filter="live">🔴 Live</button>
-  <button class="tab" data-filter="saved">💾 Saved</button>
+  <button class="tab active" data-filter="live">Live</button>
+  <button class="tab" data-filter="saved">Saved</button>
 </div>
 
 <div class="cards" id="cards"></div>
-
-<button class="fab" id="fab" aria-label="Refresh">↻</button>
-
-<!-- Manual Add Modal -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <h2>✈️ Add Flight Manually</h2>
-    <label>Flight Number</label>
-    <input type="text" id="fNum" placeholder="AC226" autocapitalize="characters">
-    <div class="row">
-      <div><label>From</label><input type="text" id="fFrom" placeholder="YVR" maxlength="4" autocapitalize="characters"></div>
-      <div><label>To</label><input type="text" id="fTo" placeholder="YYC" maxlength="4" autocapitalize="characters"></div>
-    </div>
-    <div class="row">
-      <div><label>Departure</label><input type="datetime-local" id="fDepart"></div>
-      <div><label>Arrival</label><input type="datetime-local" id="fArrive"></div>
-    </div>
-    <label>Notes</label>
-    <input type="text" id="fNotes" placeholder="Window seat, row 12A">
-    <div class="modal-btns">
-      <button class="btn-primary" id="saveBtn">Save</button>
-      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <div class="toast" id="toast"></div>
 
@@ -181,7 +142,7 @@ const $ = id => document.getElementById(id);
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 function saveLive() { localStorage.setItem(LS_FLIGHTS, JSON.stringify(liveFlights)); }
@@ -189,7 +150,7 @@ function saveSaved() { localStorage.setItem(LS_SAVED, JSON.stringify(savedFlight
 function saveRecent() { localStorage.setItem(LS_RECENT, JSON.stringify(recentSearches)); }
 
 function addRecent(q) {
-  recentSearches = [q, ...recentSearches.filter(r => r !== q)].slice(0, 8);
+  recentSearches = [q, ...recentSearches.filter(r => r !== q)].slice(0, 6);
   saveRecent();
   renderRecent();
 }
@@ -213,17 +174,19 @@ async function fetchFlightData(carrier, number) {
   if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
   const data = await resp.json();
   if (!data.contents) throw new Error('Empty response');
-
   const match = data.contents.match(/__NEXT_DATA__\s*=\s*({.*?});/s);
   if (!match) throw new Error('Could not parse flight data');
-
   const nextData = JSON.parse(match[1]);
   const ft = nextData.props?.initialState?.flightTracker;
   if (!ft?.flight) throw new Error('No flight data found');
   return ft;
 }
 
-function buildFlightCard(ft, isLive = true) {
+function getFlightId(ft) {
+  return `${ft.flight.resultHeader.carrier.fs}${ft.flight.resultHeader.flightNumber}`;
+}
+
+function buildFlightCard(ft) {
   const f = ft.flight;
   const dep = f.departureAirport;
   const arr = f.arrivalAirport;
@@ -231,6 +194,7 @@ function buildFlightCard(ft, isLive = true) {
   const stat = f.status;
   const info = f.additionalFlightInfo;
   const header = f.resultHeader;
+  const flightId = getFlightId(ft);
 
   const statusColor = stat.color === 'green' ? 'status-green' :
                       stat.color === 'yellow' ? 'status-yellow' :
@@ -240,92 +204,95 @@ function buildFlightCard(ft, isLive = true) {
   const isLanded = f.flightNote?.landed || f.flightState === 'completed';
   const isFuture = f.flightState === 'future';
 
-  // Progress calc
   let progress = 0;
   if (isLanded) progress = 100;
   else if (isFlying && sched.scheduledDepartureUTC && sched.scheduledArrivalUTC) {
     const depT = new Date(sched.scheduledDepartureUTC).getTime();
     const arrT = new Date(sched.scheduledArrivalUTC).getTime();
-    const now = Date.now();
-    progress = Math.min(95, Math.max(5, ((now - depT) / (arrT - depT)) * 100));
+    progress = Math.min(95, Math.max(5, ((Date.now() - depT) / (arrT - depT)) * 100));
   }
 
-  // Countdown
   let countdown = '';
   if (isFuture && sched.scheduledDepartureUTC) {
     const diff = new Date(sched.scheduledDepartureUTC) - new Date();
     if (diff > 0) {
       const h = Math.floor(diff / 36e5), m = Math.floor((diff % 36e5) / 6e4);
-      if (h > 48) { const d = Math.floor(h / 24); countdown = `${d}d ${h % 24}h until departure`; }
-      else countdown = h > 0 ? `${h}h ${m}m until departure` : `${m}m until departure`;
+      if (h > 48) { const d = Math.floor(h / 24); countdown = `Departs in ${d}d ${h % 24}h`; }
+      else countdown = h > 0 ? `Departs in ${h}h ${m}m` : `Departs in ${m}m`;
     }
   }
 
-  // Times
-  const depSched = dep.times?.scheduled ? `${dep.times.scheduled.time24} ${dep.times.scheduled.timezone}` : '--:--';
-  const arrSched = arr.times?.scheduled ? `${arr.times.scheduled.time24} ${arr.times.scheduled.timezone}` : '--:--';
-  const depActual = dep.times?.estimatedActual?.time24 ? `${dep.times.estimatedActual.time24} ${dep.times.estimatedActual.timezone || ''}` : null;
-  const arrActual = arr.times?.estimatedActual?.time24 ? `${arr.times.estimatedActual.time24} ${arr.times.estimatedActual.timezone || ''}` : null;
+  const depSched = dep.times?.scheduled ? dep.times.scheduled.time24 : '--:--';
+  const depTz = dep.times?.scheduled?.timezone || '';
+  const arrSched = arr.times?.scheduled ? arr.times.scheduled.time24 : '--:--';
+  const arrTz = arr.times?.scheduled?.timezone || '';
+  const depActual = dep.times?.estimatedActual?.time24 || null;
+  const arrActual = arr.times?.estimatedActual?.time24 || null;
 
   const depTimeHtml = depActual && depActual !== depSched
-    ? `<div class="time-delayed">${depSched}</div><div class="time-actual">${depActual}</div>`
-    : `<div class="time">${depSched}</div>`;
+    ? `<div class="time-delayed">${depSched}</div><div class="time-actual">${depActual} <span class="time-tz">${depTz}</span></div>`
+    : `<div class="time-sched">${depSched} <span class="time-tz">${depTz}</span></div>`;
   const arrTimeHtml = arrActual && arrActual !== arrSched
-    ? `<div class="time-delayed">${arrSched}</div><div class="time-actual">${arrActual}</div>`
-    : `<div class="time">${arrSched}</div>`;
+    ? `<div class="time-delayed">${arrSched}</div><div class="time-actual">${arrActual} <span class="time-tz">${arrTz}</span></div>`
+    : `<div class="time-sched">${arrSched} <span class="time-tz">${arrTz}</span></div>`;
 
-  const flightId = `${header.carrier.fs}${header.flightNumber}`;
-  const isSaved = savedFlights.some(s => s.id === flightId);
+  const isSaved = savedFlights.some(s => getFlightId(s) === flightId);
 
-  // Codeshares
+  // Detail cells
+  let details = [];
+  if (dep.gate) details.push({ l: 'Gate', v: dep.gate });
+  if (dep.terminal) details.push({ l: 'Term', v: dep.terminal });
+  if (arr.gate) details.push({ l: 'Arr Gate', v: arr.gate });
+  if (arr.terminal) details.push({ l: 'Arr Term', v: arr.terminal });
+  if (arr.baggage) details.push({ l: 'Baggage', v: arr.baggage });
+  if (info?.equipment?.name) details.push({ l: 'Aircraft', v: info.equipment.name });
+  if (info?.flightDuration) details.push({ l: 'Duration', v: info.flightDuration });
+  if (stat.delay?.departure?.minutes > 0) details.push({ l: 'Delay', v: `${stat.delay.departure.minutes}m` });
+
   let codeshareHtml = '';
   if (f.codeshares?.length) {
-    codeshareHtml = `<div class="codeshares">Also marketed as: <strong>${f.codeshares.map(c => `${c.fs} ${c.flightNumber}`).join(', ')}</strong></div>`;
+    codeshareHtml = `<div class="codeshares-strip">Also: <span>${f.codeshares.map(c => `${c.fs} ${c.flightNumber}`).join(', ')}</span></div>`;
   }
 
   return `
-  <div class="flight-card" data-id="${flightId}">
-    <div class="card-actions">
-      <button onclick="toggleSave('${flightId}')" title="${isSaved ? 'Unsave' : 'Save'}">${isSaved ? '⭐' : '☆'}</button>
-      <button onclick="removeLive('${flightId}')" title="Remove">✕</button>
-    </div>
-    <div class="card-header">
-      <div>
+  <div class="flight-card">
+    <div class="card-top">
+      <div class="card-top-left">
         <div class="flight-num">${header.carrier.fs} ${header.flightNumber}</div>
         <div class="airline-name">${header.carrier.name}</div>
       </div>
-      <div class="status-badge ${statusColor}">${stat.status}${stat.statusDescription ? ' · ' + stat.statusDescription : ''}</div>
+      <div class="card-top-right">
+        <div class="status-pill ${statusColor}">${stat.status}${stat.statusDescription && stat.statusDescription !== stat.status ? ' \u00b7 ' + stat.statusDescription : ''}</div>
+        <button class="card-btn ${isSaved ? 'saved' : ''}" onclick="toggleSave('${flightId}')" title="Save">${isSaved ? '\u2605' : '\u2606'}</button>
+        <button class="card-btn" onclick="removeLive('${flightId}')" title="Remove">\u00d7</button>
+      </div>
     </div>
-    <div class="route">
-      <div class="airport">
+    <div class="route-section">
+      <div class="airport-block">
         <div class="code">${dep.fs}</div>
         <div class="city">${dep.city}${dep.state ? ', ' + dep.state : ''}</div>
-        <div class="time-label">Departure</div>
-        ${depTimeHtml}
+        <div class="time-row">
+          <div class="time-label">Departure</div>
+          ${depTimeHtml}
+        </div>
       </div>
-      <div class="route-line">
-        <div class="plane ${isFlying ? 'flying' : ''}" style="${isLanded ? 'left:95%' : isFlying ? '' : 'left:5%;animation:none'}">${isFlying ? '✈️' : isLanded ? '🛬' : '✈️'}</div>
+      <div class="route-middle">
+        <div class="route-dur">${info?.flightDuration || ''}</div>
+        <div class="route-line-h"><div class="route-dot left"></div><div class="route-dot right"></div></div>
       </div>
-      <div class="airport">
+      <div class="airport-block right">
         <div class="code">${arr.fs}</div>
         <div class="city">${arr.city}${arr.state ? ', ' + arr.state : ''}</div>
-        <div class="time-label">Arrival</div>
-        ${arrTimeHtml}
+        <div class="time-row">
+          <div class="time-label">Arrival</div>
+          ${arrTimeHtml}
+        </div>
       </div>
     </div>
     ${(isFlying || isLanded) ? `<div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>` : ''}
-    <div class="detail-grid">
-      ${dep.terminal ? `<div class="detail-item"><div class="label">Terminal</div><div class="value">${dep.terminal}</div></div>` : ''}
-      ${dep.gate ? `<div class="detail-item"><div class="label">Dep Gate</div><div class="value">${dep.gate}</div></div>` : ''}
-      ${arr.gate ? `<div class="detail-item"><div class="label">Arr Gate</div><div class="value">${arr.gate}</div></div>` : ''}
-      ${arr.terminal ? `<div class="detail-item"><div class="label">Arr Term</div><div class="value">${arr.terminal}</div></div>` : ''}
-      ${arr.baggage ? `<div class="detail-item"><div class="label">Baggage</div><div class="value">${arr.baggage}</div></div>` : ''}
-      ${info?.equipment?.name ? `<div class="detail-item"><div class="label">Aircraft</div><div class="value">${info.equipment.name}</div></div>` : ''}
-      ${info?.flightDuration ? `<div class="detail-item"><div class="label">Duration</div><div class="value">${info.flightDuration}</div></div>` : ''}
-      ${stat.delay?.departure?.minutes > 0 ? `<div class="detail-item"><div class="label">Delay</div><div class="value" style="color:var(--danger)">${stat.delay.departure.minutes}m</div></div>` : ''}
-    </div>
+    ${details.length ? `<div class="detail-strip">${details.map(d => `<div class="detail-cell"><div class="dl">${d.l}</div><div class="dv">${d.v}</div></div>`).join('')}</div>` : ''}
     ${codeshareHtml}
-    ${countdown ? `<div class="countdown">⏱ ${countdown}</div>` : ''}
+    ${countdown ? `<div class="countdown-strip">${countdown}</div>` : ''}
   </div>`;
 }
 
@@ -335,21 +302,12 @@ function render() {
     c.innerHTML = `<div class="loading"><div class="spinner"></div>Fetching flight data...</div>`;
     return;
   }
-
-  if (currentFilter === 'live') {
-    if (!liveFlights.length) {
-      c.innerHTML = `<div class="empty"><div class="icon">✈️</div><p>Search for a flight to get started.<br>Try AC226, WS137, UA100...</p></div>`;
-    } else {
-      c.innerHTML = liveFlights.map(f => buildFlightCard(f, true)).join('');
-    }
+  const list = currentFilter === 'live' ? liveFlights : savedFlights;
+  if (!list.length) {
+    c.innerHTML = `<div class="empty"><p>${currentFilter === 'live' ? 'Search for a flight to get started.' : 'No saved flights.'}</p><div class="hint">${currentFilter === 'live' ? 'Try AC226, WS137, UA100' : 'Star a flight to save it'}</div></div>`;
   } else {
-    if (!savedFlights.length) {
-      c.innerHTML = `<div class="empty"><div class="icon">⭐</div><p>No saved flights yet.<br>Star a flight to save it here.</p></div>`;
-    } else {
-      c.innerHTML = savedFlights.map(f => buildFlightCard(f, false)).join('');
-    }
+    c.innerHTML = list.map(f => buildFlightCard(f)).join('');
   }
-
   const total = liveFlights.length + savedFlights.length;
   $('subtitle').textContent = total ? `Tracking ${total} flight${total !== 1 ? 's' : ''}` : 'Live flight tracking';
 }
@@ -358,110 +316,56 @@ async function searchFlight(query) {
   const q = query || $('searchInput').value;
   const parsed = parseFlightCode(q);
   if (!parsed) { toast('Invalid flight number'); return; }
-
   $('searchInput').value = `${parsed.carrier}${parsed.number}`;
   addRecent(`${parsed.carrier}${parsed.number}`);
-  isLoading = true;
-  render();
-
+  isLoading = true; render();
   try {
     const ft = await fetchFlightData(parsed.carrier, parsed.number);
-    const flightId = `${parsed.carrier}${parsed.number}`;
-    liveFlights = liveFlights.filter(f => {
-      const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
-      return fid !== flightId;
-    });
+    const fid = getFlightId(ft);
+    liveFlights = liveFlights.filter(f => getFlightId(f) !== fid);
     liveFlights.unshift(ft);
     saveLive();
     currentFilter = 'live';
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.filter === 'live'));
-    toast('Flight data loaded ✈️');
+    toast('Flight loaded');
   } catch (err) {
-    toast('Could not find flight: ' + err.message);
+    toast('Not found: ' + err.message);
   }
-
-  isLoading = false;
-  render();
+  isLoading = false; render();
 }
 
 function removeLive(id) {
-  liveFlights = liveFlights.filter(f => {
-    const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
-    return fid !== id;
-  });
-  saveLive();
-  render();
-  toast('Flight removed');
+  liveFlights = liveFlights.filter(f => getFlightId(f) !== id);
+  saveLive(); render();
 }
 
 function toggleSave(id) {
-  const existing = savedFlights.findIndex(f => {
-    const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
-    return fid === id;
-  });
-  if (existing >= 0) {
-    savedFlights.splice(existing, 1);
-    saveSaved();
-    render();
-    toast('Removed from saved');
-  } else {
-    const flight = liveFlights.find(f => {
-      const fid = `${f.flight.resultHeader.carrier.fs}${f.flight.resultHeader.flightNumber}`;
-      return fid === id;
-    });
-    if (flight) {
-      savedFlights.unshift(flight);
-      saveSaved();
-      render();
-      toast('Saved ⭐');
-    }
-  }
+  const idx = savedFlights.findIndex(f => getFlightId(f) === id);
+  if (idx >= 0) { savedFlights.splice(idx, 1); saveSaved(); render(); toast('Unsaved'); return; }
+  const flight = liveFlights.find(f => getFlightId(f) === id);
+  if (flight) { savedFlights.unshift(flight); saveSaved(); render(); toast('Saved'); }
 }
 
-// Refresh all live flights
 async function refreshAll() {
   toast('Refreshing...');
-  const toRefresh = [...liveFlights];
-  for (const ft of toRefresh) {
-    const carrier = ft.flight.resultHeader.carrier.fs;
-    const number = ft.flight.resultHeader.flightNumber;
-    try {
-      const updated = await fetchFlightData(carrier, number);
-      const idx = liveFlights.findIndex(f =>
-        f.flight.resultHeader.carrier.fs === carrier &&
-        f.flight.resultHeader.flightNumber === number
-      );
-      if (idx >= 0) liveFlights[idx] = updated;
-    } catch (e) { /* keep old data */ }
+  for (let i = 0; i < liveFlights.length; i++) {
+    const carrier = liveFlights[i].flight.resultHeader.carrier.fs;
+    const number = liveFlights[i].flight.resultHeader.flightNumber;
+    try { liveFlights[i] = await fetchFlightData(carrier, number); } catch (e) {}
   }
-  saveLive();
-  render();
-  toast('Refreshed ✅');
+  saveLive(); render(); toast('Updated');
 }
 
-// Search handlers
 $('searchBtn').addEventListener('click', () => searchFlight());
 $('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') searchFlight(); });
-
-// Tab handlers
 document.querySelectorAll('.tab').forEach(t => {
   t.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    currentFilter = t.dataset.filter;
-    render();
+    t.classList.add('active'); currentFilter = t.dataset.filter; render();
   });
 });
-
-// FAB = refresh
-$('fab').addEventListener('click', refreshAll);
-
-// Countdown ticker
 setInterval(render, 60000);
-
-// Init
-renderRecent();
-render();
+renderRecent(); render();
 </script>
 </body>
 </html>
