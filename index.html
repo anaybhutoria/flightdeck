@@ -174,9 +174,20 @@ async function fetchFlightData(carrier, number) {
   if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
   const data = await resp.json();
   if (!data.contents) throw new Error('Empty response');
-  const match = data.contents.match(/__NEXT_DATA__\s*=\s*({.*?});/s);
-  if (!match) throw new Error('Could not parse flight data');
-  const nextData = JSON.parse(match[1]);
+  // Extract __NEXT_DATA__ JSON using indexOf for reliability
+  const marker = '__NEXT_DATA__ = ';
+  const start = data.contents.indexOf(marker);
+  if (start === -1) throw new Error('Could not find flight data');
+  const jsonStart = start + marker.length;
+  // Find the closing ;__NEXT_LOADED_PAGES__ or just the semicolon
+  let depth = 0, i = jsonStart;
+  for (; i < data.contents.length; i++) {
+    if (data.contents[i] === '{') depth++;
+    else if (data.contents[i] === '}') { depth--; if (depth === 0) { i++; break; } }
+  }
+  const jsonStr = data.contents.substring(jsonStart, i);
+  let nextData;
+  try { nextData = JSON.parse(jsonStr); } catch(e) { throw new Error('Failed to parse flight JSON'); }
   const ft = nextData.props?.initialState?.flightTracker;
   if (!ft?.flight) throw new Error('No flight data found');
   return ft;
